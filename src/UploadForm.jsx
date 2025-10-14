@@ -11,7 +11,7 @@ export default function UploadForm() {
   const [newLogin, setNewLogin] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [suggestedUsers, setSuggestedUsers] = useState([]);
-
+  const [darkMode, setDarkMode] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
@@ -91,9 +91,12 @@ export default function UploadForm() {
   useEffect(() => {
     fetchSuggestedUsers();
   }, []);
+  useEffect(() => {
+    document.body.classList.toggle("dark-mode", darkMode);
+  }, [darkMode]);
 
   return (
-    <div className="upload-form">
+    <div className={`upload-form ${darkMode ? "dark" : ""}`}>
       <div className="toggle-buttons">
         <button onClick={() => setShowSuggestions((prev) => !prev)}>👥 Użytkownicy</button>
         <button onClick={() => setShowRegister((prev) => !prev)}>🔐 Rejestracja</button>
@@ -102,7 +105,7 @@ export default function UploadForm() {
       {showRegister && (
   <div className="register-overlay">
     <div className="register-content">
-      <button className="close-btn" onClick={() => setShowRegister(false)}>❌ Zamknij</button>
+      <button className="close-btn" onClick={() => setShowRegister(false)}>Zamknij</button>
       <h2>🔐 Rejestracja użytkownika</h2>
       <input
         type="text"
@@ -120,6 +123,11 @@ export default function UploadForm() {
     </div>
   </div>
 )}
+<div className="theme-toggle">
+  <button onClick={() => setDarkMode((prev) => !prev)}>
+    {darkMode ? "☀️ Tryb jasny" : "🌙 Tryb ciemny"}
+  </button>
+</div>
 
 
       <h2>Biały Włodzimierz</h2>
