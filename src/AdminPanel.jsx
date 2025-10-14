@@ -8,21 +8,19 @@ export default function AdminPanel() {
   const [files, setFiles] = useState([]);
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
 
-const fetchUsers = useCallback(async () => {
-  try {
-    const res = await axios.get(`${backendUrl}/admin/users`, {
-      headers: { "x-admin-password": adminPassword }
-    });
-    setUsers(res.data);
-  } catch {
-    alert("Błędne hasło lub brak dostępu");
-  }
-}, [adminPassword]);
-
-// ❌ Nie potrzebujesz useEffect
-
-
-
+  const fetchUsers = useCallback(async () => {
+    try {
+      const res = await axios.get(`${backendUrl}/admin/users`, {
+        headers: { "x-admin-password": adminPassword }
+      });
+      setUsers(res.data);
+      setSelectedUser(""); // reset wyboru
+      setFiles([]); // wyczyść pliki
+    } catch {
+      alert("Błędne hasło lub brak dostępu");
+      setUsers([]);
+    }
+  }, [adminPassword]);
 
   const fetchFiles = async (userId) => {
     setSelectedUser(userId);
@@ -48,12 +46,13 @@ const fetchUsers = useCallback(async () => {
         value={adminPassword}
         onChange={(e) => setAdminPassword(e.target.value)}
         placeholder="Hasło administratora"
+        style={{ marginRight: "10px" }}
       />
       <button onClick={fetchUsers}>Zaloguj</button>
 
       {users.length > 0 && (
         <>
-          <h3>👥 Wybierz użytkownika:</h3>
+          <h3 style={{ marginTop: "20px" }}>👥 Wybierz użytkownika:</h3>
           <select onChange={(e) => fetchFiles(e.target.value)} value={selectedUser}>
             <option value="">-- wybierz --</option>
             {users.map((user) => (
@@ -65,20 +64,27 @@ const fetchUsers = useCallback(async () => {
 
       {selectedUser && (
         <>
-          <h3>📄 Pliki użytkownika: {selectedUser}</h3>
-          <ul>
-            {files.map((file, index) => (
-              <li key={index}>
-                {file}
-                <a href={`${backendUrl}/files/${selectedUser}/${file}`} download>
-                  <button>Pobierz</button>
-                </a>
-                <button onClick={() => handleDeleteFile(file)}>Usuń</button>
-              </li>
-            ))}
-          </ul>
+          <h3 style={{ marginTop: "20px" }}>📄 Pliki użytkownika: {selectedUser}</h3>
+          {files.length === 0 ? (
+            <p>Brak plików</p>
+          ) : (
+            <ul>
+              {files.map((file, index) => (
+                <li key={index}>
+                  {file}
+                  <a href={`${backendUrl}/files/${selectedUser}/${file}`} download>
+                    <button style={{ marginLeft: "10px" }}>Pobierz</button>
+                  </a>
+                  <button onClick={() => handleDeleteFile(file)} style={{ marginLeft: "5px" }}>
+                    Usuń
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </>
       )}
     </div>
   );
 }
+
