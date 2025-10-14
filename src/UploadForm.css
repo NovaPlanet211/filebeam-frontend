@@ -1,3 +1,7 @@
+.register-content {
+  font-family: 'Frutiger'; 
+}
+
 /* Pełnoekranowy overlay rejestracji */
 .register-overlay {
   position: fixed;
