@@ -7,7 +7,7 @@ export default function AdminPanel() {
   const [selectedUser, setSelectedUser] = useState("");
   const [files, setFiles] = useState([]);
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
-
+  
   const fetchUsers = useCallback(async () => {
     try {
       const res = await axios.get(`${backendUrl}/admin/users`, {
@@ -36,6 +36,22 @@ export default function AdminPanel() {
     await axios.delete(`${backendUrl}/files/${selectedUser}/${fileName}`);
     fetchFiles(selectedUser);
   };
+  
+  const handleDeleteUser = async () => {
+  if (!selectedUser) return;
+  const confirmDelete = window.confirm(`Na pewno chcesz usunąć użytkownika "${selectedUser}"?`);
+  if (!confirmDelete) return;
+
+  try {
+    await axios.delete(`${backendUrl}/admin/users/${selectedUser}`, {
+      headers: { "x-admin-password": adminPassword }
+    });
+    alert("Użytkownik usunięty");
+    fetchUsers(); // odśwież listę
+  } catch {
+    alert("Błąd przy usuwaniu użytkownika");
+  }
+};
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
@@ -62,22 +78,25 @@ export default function AdminPanel() {
         </>
       )}
 
-      {selectedUser && (
-        <>
-          <h3 style={{ marginTop: "20px" }}>📄 Pliki użytkownika: {selectedUser}</h3>
-          {files.length === 0 ? (
-            <p>Brak plików</p>
-          ) : (
-            <ul>
-              {files.map((file, index) => (
-                <li key={index}>
-                  {file}
-                  <a href={`${backendUrl}/files/${selectedUser}/${file}`} download>
-                    <button style={{ marginLeft: "10px" }}>Pobierz</button>
-                  </a>
-                  <button onClick={() => handleDeleteFile(file)} style={{ marginLeft: "5px" }}>
-                    Usuń
-                  </button>
+{selectedUser && (
+  <>
+    <h3 style={{ marginTop: "20px" }}>📄 Pliki użytkownika: {selectedUser}</h3>
+    <button onClick={handleDeleteUser} style={{ marginBottom: "10px", backgroundColor: "#f44336", color: "white" }}>
+      🗑️ Usuń użytkownika
+    </button>
+    {files.length === 0 ? (
+      <p>Brak plików</p>
+    ) : (
+      <ul>
+        {files.map((file, index) => (
+          <li key={index}>
+            {file}
+            <a href={`${backendUrl}/files/${selectedUser}/${file}`} download>
+              <button style={{ marginLeft: "10px" }}>Pobierz</button>
+            </a>
+            <button onClick={() => handleDeleteFile(file)} style={{ marginLeft: "5px" }}>
+              Usuń
+            </button>
                 </li>
               ))}
             </ul>
@@ -86,5 +105,6 @@ export default function AdminPanel() {
       )}
     </div>
   );
+
 }
 
