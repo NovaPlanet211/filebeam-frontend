@@ -7,13 +7,16 @@ export default function UploadForm() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState("");
-
+  const [loginUsername, setLoginUsername] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [newLogin, setNewLogin] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
 
@@ -45,6 +48,28 @@ export default function UploadForm() {
       alert("Nie udało się usunąć pliku");
     }
   };
+const handleLogin = async () => {
+  if (!loginUsername || !loginPassword) {
+    alert("Podaj login i hasło");
+    return;
+  }
+
+  try {
+    const res = await axios.post(`${backendUrl}/login`, {
+      username: loginUsername,
+      password: loginPassword,
+    });
+
+    alert("Zalogowano");
+    setUserId(loginUsername);
+    setIsLoggedIn(true);
+    setLoginUsername("");
+    setLoginPassword("");
+    fetchFiles();
+  } catch (err) {
+    alert("Nie udało się zalogować");
+  }
+};
 
   const handleRegister = async () => {
   if (!newLogin || !newPassword) {
@@ -110,6 +135,7 @@ export default function UploadForm() {
         <button onClick={() => setShowSuggestions((prev) => !prev)}>👥 Użytkownicy</button>
         <button onClick={() => setShowRegister((prev) => !prev)}>🔐 Rejestracja</button>
       </div>
+<button onClick={() => setShowLogin((prev) => !prev)}>🔑 Logowanie</button>
 
       {showRegister && (
   <div className="register-overlay">
@@ -132,6 +158,25 @@ export default function UploadForm() {
     </div>
   </div>
 )}
+<div className="register-overlay">
+  <div className="register-content">
+    <h2>🔑 Logowanie</h2>
+    <input
+      type="text"
+      value={loginUsername}
+      onChange={(e) => setLoginUsername(e.target.value)}
+      placeholder="Login"
+    />
+    <input
+      type="password"
+      value={loginPassword}
+      onChange={(e) => setLoginPassword(e.target.value)}
+      placeholder="Hasło"
+    />
+    <button onClick={handleLogin}>Zaloguj</button>
+  </div>
+</div>
+
 <div className="theme-toggle">
   <button onClick={() => setDarkMode((prev) => !prev)}>
     {darkMode ? "☀️ Tryb jasny" : "🌙 Tryb ciemny"}
@@ -185,6 +230,15 @@ export default function UploadForm() {
           );
         })}
       </ul>
+      {isLoggedIn ? (
+  <>
+    {/* upload, pliki, itd. */}
+  </>
+) : (
+  <p style={{ textAlign: "center", marginTop: "40px" }}>
+     Zaloguj się, aby przesyłać pliki
+  </p>
+)}
 
       <a href="#/admin">
         <button style={{ backgroundColor: "#444", marginTop: "30px" }}>
