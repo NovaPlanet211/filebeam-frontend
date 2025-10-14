@@ -160,7 +160,7 @@ export default function UploadForm() {
             <div className="register-overlay">
               <div className="register-content">
                 <button className="close-btn" onClick={() => setShowRegister(false)}>Zamknij</button>
-                <h2>🔐 Rejestracja użytkownika</h2>
+                <h2>Rejestracja użytkownika</h2>
                 <input
                   type="text"
                   value={newLogin}
@@ -182,7 +182,7 @@ export default function UploadForm() {
             <div className="register-overlay">
               <div className="register-content">
                 <button className="close-btn" onClick={() => setShowLogin(false)}>Zamknij</button>
-                <h2>🔑 Logowanie</h2>
+                <h2>Logowanie</h2>
                 <input
                   type="text"
                   value={loginUsername}
@@ -202,8 +202,8 @@ export default function UploadForm() {
 
           <div className="upload-form">
             <div className="toggle-buttons">
-              <button onClick={() => setShowRegister(true)}>🔐 Rejestracja</button>
-              <button onClick={() => setShowLogin(true)}>🔑 Logowanie</button>
+              <button onClick={() => setShowRegister(true)}>Rejestracja</button>
+              <button onClick={() => setShowLogin(true)}>Logowanie</button>
             </div>
             <p style={{ textAlign: "center", marginTop: "40px" }}>
                 Zarejestruj się lub zaloguj, aby przesyłać pliki

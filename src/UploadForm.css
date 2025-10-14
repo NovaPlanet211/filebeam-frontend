@@ -1,6 +1,4 @@
-.register-content {
-  font-family: 'Frutiger'; 
-}
+
 
 /* Pełnoekranowy overlay rejestracji */
 .register-overlay {
@@ -313,4 +311,6 @@
   animation: neonPulse 2s infinite;
   transition: all 0.3s ease;
 }
-
+.register-content {
+  font-family: 'Frutiger'; 
+}
