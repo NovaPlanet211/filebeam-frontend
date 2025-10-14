@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/filebeam-frontend/static/css/main.e4616704.css",
-    "main.js": "/filebeam-frontend/static/js/main.d8f58dcf.js",
+    "main.js": "/filebeam-frontend/static/js/main.cbeaa823.js",
     "index.html": "/filebeam-frontend/index.html",
     "main.e4616704.css.map": "/filebeam-frontend/static/css/main.e4616704.css.map",
-    "main.d8f58dcf.js.map": "/filebeam-frontend/static/js/main.d8f58dcf.js.map"
+    "main.cbeaa823.js.map": "/filebeam-frontend/static/js/main.cbeaa823.js.map"
   },
   "entrypoints": [
     "static/css/main.e4616704.css",
-    "static/js/main.d8f58dcf.js"
+    "static/js/main.cbeaa823.js"
   ]
 }
