@@ -12,6 +12,9 @@ export default function UploadForm() {
   const [newPassword, setNewPassword] = useState("");
   const [suggestedUsers, setSuggestedUsers] = useState([]);
 
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
 
   const handleUpload = async () => {
@@ -91,33 +94,44 @@ export default function UploadForm() {
 
   return (
     <div className="upload-form">
-      <div className="register-box">
-        <h3>🔐 Rejestracja</h3>
-        <input
-          type="text"
-          value={newLogin}
-          onChange={(e) => setNewLogin(e.target.value)}
-          placeholder="Login"
-        />
-        <input
-          type="password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          placeholder="Hasło"
-        />
-        <button onClick={handleRegister}>Zarejestruj</button>
+      <div className="toggle-buttons">
+        <button onClick={() => setShowSuggestions((prev) => !prev)}>👥 Użytkownicy</button>
+        <button onClick={() => setShowRegister((prev) => !prev)}>🔐 Rejestracja</button>
       </div>
+
+      {showRegister && (
+        <div className="register-box">
+          <h3>🔐 Rejestracja</h3>
+          <input
+            type="text"
+            value={newLogin}
+            onChange={(e) => setNewLogin(e.target.value)}
+            placeholder="Login"
+          />
+          <input
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="Hasło"
+          />
+          <button onClick={handleRegister}>Zarejestruj</button>
+        </div>
+      )}
 
       <h2>📁 FileBeam Web</h2>
 
-      <h3>👥 Wybierz istniejącego użytkownika:</h3>
-      <div className="suggestions">
-        {suggestedUsers.map((user) => (
-          <button key={user} onClick={() => setUserId(user)}>
-            {user}
-          </button>
-        ))}
-      </div>
+      {showSuggestions && (
+        <>
+          <h3>👥 Wybierz istniejącego użytkownika:</h3>
+          <div className="suggestions">
+            {suggestedUsers.map((user) => (
+              <button key={user} onClick={() => setUserId(user)}>
+                {user}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
 
       <input
         type="text"
@@ -159,4 +173,3 @@ export default function UploadForm() {
     </div>
   );
 }
-
