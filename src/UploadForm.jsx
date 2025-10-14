@@ -61,16 +61,19 @@ export default function UploadForm() {
         password: loginPassword,
       });
 
-      // zakładamy sukces jeśli status 200
-      alert("Zalogowano");
-      setUserId(loginUsername);
-      setIsLoggedIn(true);
-      localStorage.setItem("userId", loginUsername);
-      localStorage.setItem("isLoggedIn", "true");
-      setLoginUsername("");
-      setLoginPassword("");
-      setShowLogin(false);
-      fetchFiles();
+      if (res.status === 200) {
+        setUserId(loginUsername);
+        setIsLoggedIn(true);
+        localStorage.setItem("userId", loginUsername);
+        localStorage.setItem("isLoggedIn", "true");
+        setLoginUsername("");
+        setLoginPassword("");
+        setShowLogin(false);
+        fetchFiles();
+        alert("Zalogowano");
+      } else {
+        alert("Błąd logowania");
+      }
     } catch (err) {
       if (err.response?.status === 401 || err.response?.status === 403) {
         alert("Nieprawidłowy login lub hasło");
@@ -87,21 +90,25 @@ export default function UploadForm() {
     }
 
     try {
-      await axios.post(`${backendUrl}/register`, {
+      const res = await axios.post(`${backendUrl}/register`, {
         username: newLogin,
         password: newPassword,
       });
 
-      alert("Użytkownik zarejestrowany!");
-      setUserId(newLogin);
-      setIsLoggedIn(true);
-      localStorage.setItem("userId", newLogin);
-      localStorage.setItem("isLoggedIn", "true");
-      setNewLogin("");
-      setNewPassword("");
-      setShowRegister(false);
-      fetchSuggestedUsers();
-      fetchFiles();
+      if (res.status === 200 || res.status === 201) {
+        setUserId(newLogin);
+        setIsLoggedIn(true);
+        localStorage.setItem("userId", newLogin);
+        localStorage.setItem("isLoggedIn", "true");
+        setNewLogin("");
+        setNewPassword("");
+        setShowRegister(false);
+        fetchSuggestedUsers();
+        fetchFiles();
+        alert("Użytkownik zarejestrowany!");
+      } else {
+        alert("Błąd rejestracji");
+      }
     } catch (err) {
       if (err.response?.status === 409) {
         alert("Taki użytkownik już istnieje");
@@ -259,13 +266,9 @@ export default function UploadForm() {
             </>
           )}
 
-          <input
-            type="text"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            placeholder="Wpisz nazwę użytkownika"
-            style={{ marginTop: 12 }}
-          />
+          <p style={{ marginTop: 12, fontWeight: "bold" }}>
+            👤 Zalogowany jako: <span style={{ color: "#00e0ff" }}>{userId}</span>
+          </p>
 
           <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "block", marginTop: 12 }} />
 
