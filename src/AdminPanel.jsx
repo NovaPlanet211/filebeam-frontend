@@ -2,14 +2,22 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function AdminPanel() {
+  const [adminPassword, setAdminPassword] = useState("");
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [files, setFiles] = useState([]);
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
 
-  useEffect(() => {
-    axios.get(`${backendUrl}/admin/users`).then((res) => setUsers(res.data));
-  }, []);
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get(`${backendUrl}/admin/users`, {
+        headers: { "x-admin-password": adminPassword }
+      });
+      setUsers(res.data);
+    } catch {
+      alert("Błędne hasło lub brak dostępu");
+    }
+  };
 
   const fetchFiles = async (userId) => {
     setSelectedUser(userId);
@@ -29,14 +37,26 @@ export default function AdminPanel() {
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
       <h2>🛠️ Panel administratora</h2>
-      <h3>👥 Użytkownicy:</h3>
-      <ul>
-        {users.map((user) => (
-          <li key={user}>
-            <button onClick={() => fetchFiles(user)}>{user}</button>
-          </li>
-        ))}
-      </ul>
+
+      <input
+        type="password"
+        value={adminPassword}
+        onChange={(e) => setAdminPassword(e.target.value)}
+        placeholder="Hasło administratora"
+      />
+      <button onClick={fetchUsers}>Zaloguj</button>
+
+      {users.length > 0 && (
+        <>
+          <h3>👥 Wybierz użytkownika:</h3>
+          <select onChange={(e) => fetchFiles(e.target.value)} value={selectedUser}>
+            <option value="">-- wybierz --</option>
+            {users.map((user) => (
+              <option key={user} value={user}>{user}</option>
+            ))}
+          </select>
+        </>
+      )}
 
       {selectedUser && (
         <>
@@ -45,10 +65,7 @@ export default function AdminPanel() {
             {files.map((file, index) => (
               <li key={index}>
                 {file}
-                <a
-                  href={`${backendUrl}/files/${selectedUser}/${file}`}
-                  download
-                >
+                <a href={`${backendUrl}/files/${selectedUser}/${file}`} download>
                   <button>Pobierz</button>
                 </a>
                 <button onClick={() => handleDeleteFile(file)}>Usuń</button>
