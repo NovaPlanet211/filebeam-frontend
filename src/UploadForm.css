@@ -38,7 +38,7 @@
   display: block;
   margin: 12px auto;
   padding: 10px;
-  width: 100%;
+  width: 90%;
   font-size: 16px;
   border-radius: 6px;
   border: 1px solid #ccc;
@@ -280,5 +280,32 @@
   font-weight: bold;
   animation: rainbowFlash 2s infinite;
   transition: color 0.3s ease;
+}
+@keyframes neonPulse {
+  0%, 100% {
+    text-shadow:
+      0 0 5px #fff,
+      0 0 10px #ff00ff,
+      0 0 20px #ff00ff,
+      0 0 40px #ff00ff,
+      0 0 80px #ff00ff;
+    color: #ff00ff;
+  }
+  50% {
+    text-shadow:
+      0 0 2px #fff,
+      0 0 4px #00ffff,
+      0 0 8px #00ffff,
+      0 0 16px #00ffff,
+      0 0 32px #00ffff;
+    color: #00ffff;
+  }
+}
+
+.neon-text {
+  font-style: italic;
+  font-weight: bold;
+  animation: neonPulse 2s infinite;
+  transition: all 0.3s ease;
 }
 

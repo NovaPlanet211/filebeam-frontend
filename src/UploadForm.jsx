@@ -54,6 +54,8 @@ export default function UploadForm() {
       alert("Podaj login i hasło");
       return;
     }
+    localStorage.setItem("userId", loginUsername);
+    localStorage.setItem("isLoggedIn", "true");
 
     try {
       const res = await axios.post(`${backendUrl}/login`, {
@@ -78,6 +80,8 @@ export default function UploadForm() {
       alert("Podaj login i hasło");
       return;
     }
+    localStorage.setItem("userId", newLogin);
+    localStorage.setItem("isLoggedIn", "true");
 
     try {
       await axios.post(`${backendUrl}/register`, {
@@ -120,7 +124,15 @@ export default function UploadForm() {
       console.error("Nie udało się pobrać użytkowników");
     }
   };
+  useEffect(() => {
+  const storedUser = localStorage.getItem("userId");
+  const storedLogin = localStorage.getItem("isLoggedIn");
 
+  if (storedUser && storedLogin === "true") {
+    setUserId(storedUser);
+    setIsLoggedIn(true);
+  }
+}, []);
   useEffect(() => {
     if (userId) fetchFiles();
   }, [fetchFiles, userId]);
