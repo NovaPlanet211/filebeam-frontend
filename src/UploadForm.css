@@ -1,33 +1,58 @@
-.upload-form {
-  max-width: 500px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #f0f4ff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: "Segoe UI", sans-serif;
-  text-align: center;
+/* Pełnoekranowy overlay rejestracji */
+.register-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to bottom right, #f0f4ff, #dbe9ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  overflow: auto;
 }
 
-.upload-form h2 {
+/* Kontener formularza */
+.register-content {
+  background-color: white;
+  padding: 40px 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Nagłówek */
+.register-content h2 {
   margin-bottom: 20px;
   font-size: 24px;
   color: #333;
 }
 
-.upload-form input[type="text"],
-.upload-form input[type="file"] {
+/* Pola formularza */
+.register-content input {
   display: block;
-  margin: 10px auto;
+  margin: 12px auto;
   padding: 10px;
-  font-size: 16px;
   width: 100%;
+  font-size: 16px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  transition: border-color 0.2s ease;
 }
 
-.upload-form button {
-  margin-top: 15px;
+.register-content input:focus {
+  border-color: #0078d4;
+  outline: none;
+}
+
+/* Przycisk rejestracji */
+.register-content button {
+  margin-top: 20px;
   padding: 10px 20px;
   font-size: 16px;
   background-color: #0078d4;
@@ -38,75 +63,35 @@
   transition: background-color 0.2s ease;
 }
 
-.upload-form button:hover {
+.register-content button:hover {
   background-color: #005ea2;
 }
 
-.upload-form .message {
-  margin-top: 20px;
-  font-size: 16px;
-  color: #007a00;
-}
-.register-box {
+/* Przycisk zamknięcia */
+.close-btn {
   position: absolute;
-  top: 20px;
+  top: 16px;
   right: 20px;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 220px;
-}
-
-.register-box h3 {
-  margin-bottom: 10px;
-  font-size: 18px;
-  color: #333;
-  text-align: center;
-}
-
-.register-box input {
-  display: block;
-  margin: 8px auto;
-  padding: 8px;
-  width: 90%;
-  font-size: 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-.register-box button {
-  margin-top: 10px;
-  padding: 8px 12px;
-  font-size: 14px;
-  background-color: #0078d4;
-  color: white;
+  background: none;
   border: none;
-  border-radius: 6px;
+  font-size: 22px;
+  color: #666;
   cursor: pointer;
-  width: 100%;
+  transition: color 0.2s ease;
 }
 
-.register-box button:hover {
-  background-color: #005ea2;
-}
-.toggle-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
+.close-btn:hover {
+  color: #000;
 }
 
-.toggle-buttons button {
-  padding: 8px 14px;
-  font-size: 14px;
-  background-color: #eee;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.toggle-buttons button:hover {
-  background-color: #ddd;
+/* Animacja wejścia */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

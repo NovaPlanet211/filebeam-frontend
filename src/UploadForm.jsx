@@ -100,25 +100,29 @@ export default function UploadForm() {
       </div>
 
       {showRegister && (
-        <div className="register-box">
-          <h3>🔐 Rejestracja</h3>
-          <input
-            type="text"
-            value={newLogin}
-            onChange={(e) => setNewLogin(e.target.value)}
-            placeholder="Login"
-          />
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="Hasło"
-          />
-          <button onClick={handleRegister}>Zarejestruj</button>
-        </div>
-      )}
+  <div className="register-overlay">
+    <div className="register-content">
+      <button className="close-btn" onClick={() => setShowRegister(false)}>❌ Zamknij</button>
+      <h2>🔐 Rejestracja użytkownika</h2>
+      <input
+        type="text"
+        value={newLogin}
+        onChange={(e) => setNewLogin(e.target.value)}
+        placeholder="Login"
+      />
+      <input
+        type="password"
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
+        placeholder="Hasło"
+      />
+      <button onClick={handleRegister}>Zarejestruj</button>
+    </div>
+  </div>
+)}
 
-      <h2>SantaManta</h2>
+
+      <h2>Biały Włodzimierz</h2>
 
       {showSuggestions && (
         <>
