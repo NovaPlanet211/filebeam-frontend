@@ -3,8 +3,10 @@ import UploadForm from "./UploadForm";
 import AdminPanel from "./AdminPanel";
 
 function App() {
+  const isLocal = window.location.hostname === "localhost";
+
   return (
-    <Router basename="/filebeam-frontend">
+    <Router basename={isLocal ? "/" : "/filebeam-frontend"}>
       <Routes>
         <Route path="/" element={<UploadForm />} />
         <Route path="/admin" element={<AdminPanel />} />
