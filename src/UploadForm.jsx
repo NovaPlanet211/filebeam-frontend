@@ -4,15 +4,18 @@ import "./UploadForm.css";
 
 export default function UploadForm() {
   const [file, setFile] = useState(null);
-  const [newUser, setNewUser] = useState("");
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState("");
 
+  const [newLogin, setNewLogin] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [suggestedUsers, setSuggestedUsers] = useState([]);
+
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
 
   const handleUpload = async () => {
-    if (!file) return alert("Wybierz plik");
+    if (!file || !userId) return alert("Wybierz plik i użytkownika");
 
     const formData = new FormData();
     formData.append("file", file);
@@ -23,8 +26,7 @@ export default function UploadForm() {
       alert("Plik wysłany!");
       setFile(null);
       fetchFiles();
-    } catch (err) {
-      console.error("Błąd:", err);
+    } catch {
       alert("Błąd przy wysyłaniu");
     } finally {
       setLoading(false);
@@ -36,20 +38,26 @@ export default function UploadForm() {
       await axios.delete(`${backendUrl}/files/${userId}/${fileName}`);
       alert("Plik usunięty!");
       fetchFiles();
-    } catch (err) {
-      console.error("Błąd przy usuwaniu:", err);
+    } catch {
       alert("Nie udało się usunąć pliku");
     }
   };
 
   const handleRegister = async () => {
+    if (!newLogin || !newPassword) return alert("Podaj login i hasło");
+
     try {
-      await axios.post(`${backendUrl}/register`, { username: newUser });
-      alert("Użytkownik utworzony!");
-      setUserId(newUser);
-      setNewUser("");
-    } catch (err) {
-      alert("Nie udało się utworzyć użytkownika");
+      await axios.post(`${backendUrl}/register`, {
+        username: newLogin,
+        password: newPassword
+      });
+      alert("Użytkownik zarejestrowany!");
+      setUserId(newLogin);
+      setNewLogin("");
+      setNewPassword("");
+      fetchSuggestedUsers();
+    } catch {
+      alert("Nie udało się zarejestrować");
     }
   };
 
@@ -57,20 +65,59 @@ export default function UploadForm() {
     try {
       const res = await axios.get(`${backendUrl}/files/${userId}`);
       setFiles(res.data);
-    } catch (err) {
-      console.error("Błąd przy pobieraniu plików:", err);
+    } catch {
+      console.error("Błąd przy pobieraniu plików");
     }
-  }, [backendUrl, userId]);
+  }, [userId]);
+
+  const fetchSuggestedUsers = async () => {
+    try {
+      const res = await axios.get(`${backendUrl}/admin/users`, {
+        headers: { "x-admin-password": "BadMojo2008" }
+      });
+      setSuggestedUsers(res.data);
+    } catch {
+      console.error("Nie udało się pobrać użytkowników");
+    }
+  };
 
   useEffect(() => {
     if (userId) fetchFiles();
   }, [fetchFiles, userId]);
 
+  useEffect(() => {
+    fetchSuggestedUsers();
+  }, []);
+
   return (
     <div className="upload-form">
+      <div className="register-box">
+        <h3>🔐 Rejestracja</h3>
+        <input
+          type="text"
+          value={newLogin}
+          onChange={(e) => setNewLogin(e.target.value)}
+          placeholder="Login"
+        />
+        <input
+          type="password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          placeholder="Hasło"
+        />
+        <button onClick={handleRegister}>Zarejestruj</button>
+      </div>
+
       <h2>📁 FileBeam Web</h2>
 
-      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+      <h3>👥 Wybierz istniejącego użytkownika:</h3>
+      <div className="suggestions">
+        {suggestedUsers.map((user) => (
+          <button key={user} onClick={() => setUserId(user)}>
+            {user}
+          </button>
+        ))}
+      </div>
 
       <input
         type="text"
@@ -79,14 +126,7 @@ export default function UploadForm() {
         placeholder="Wpisz nazwę użytkownika"
       />
 
-      <h3>🔐 Rejestracja użytkownika</h3>
-      <input
-        type="text"
-        value={newUser}
-        onChange={(e) => setNewUser(e.target.value)}
-        placeholder="Nowa nazwa użytkownika"
-      />
-      <button onClick={handleRegister}>Zarejestruj</button>
+      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
 
       <button onClick={handleUpload} disabled={loading}>
         {loading ? "Wysyłanie..." : "Wyślij"}
@@ -119,3 +159,4 @@ export default function UploadForm() {
     </div>
   );
 }
+
