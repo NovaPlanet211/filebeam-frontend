@@ -211,7 +211,7 @@ export default function UploadForm() {
             </button>
           </div>
 
-          <h2 className="neon-text">BIAŁY WŁODZIMIERZ</h2>
+          <h2 className="rainbowFlash">BIAŁY WŁODZIMIERZ</h2>
 
           <div className="toggle-buttons">
             <button onClick={() => setShowSuggestions((prev) => !prev)}>👥 Użytkownicy</button>

@@ -163,7 +163,8 @@
 
 .upload-form li button {
   margin: 6px;
-  background-color: #e81123;
+  background-color: #11b166;
+  opacity: 0.4;
 }
 
 .upload-form li button:hover {
