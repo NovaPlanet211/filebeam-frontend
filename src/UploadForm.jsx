@@ -104,6 +104,13 @@ export default function UploadForm() {
       }
     }
   };
+  const handleLogout = () => {
+  localStorage.removeItem("userId");
+  localStorage.removeItem("isLoggedIn");
+  setUserId("");
+  setIsLoggedIn(false);
+  setShowRegister(true); 
+  };
 
   const fetchFiles = useCallback(async () => {
     try {
@@ -209,6 +216,9 @@ export default function UploadForm() {
             <button onClick={() => setDarkMode((prev) => !prev)}>
               {darkMode ? "☀️ Tryb jasny" : "🌙 Tryb ciemny"}
             </button>
+          <button onClick={handleLogout} style={{ marginBottom: "20px" }}>
+             Wyloguj
+        </button>
           </div>
 
           <h2 className="neon-text">BIAŁY WŁODZIMIERZ</h2>
@@ -216,7 +226,7 @@ export default function UploadForm() {
           <div className="toggle-buttons">
             <button onClick={() => setShowSuggestions((prev) => !prev)}>👥 Użytkownicy</button>
           </div>
-
+        
           {showSuggestions && (
             <>
               <h3>👥 Wybierz istniejącego użytkownika:</h3>
