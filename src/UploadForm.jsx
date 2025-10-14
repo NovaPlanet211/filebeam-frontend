@@ -199,7 +199,7 @@ export default function UploadForm() {
               <button onClick={() => setShowLogin(true)}>🔑 Logowanie</button>
             </div>
             <p style={{ textAlign: "center", marginTop: "40px" }}>
-              🔒 Zarejestruj się lub zaloguj, aby przesyłać pliki
+                Zarejestruj się lub zaloguj, aby przesyłać pliki
             </p>
           </div>
         </>
@@ -211,7 +211,7 @@ export default function UploadForm() {
             </button>
           </div>
 
-          <h2 className="rainbowFlash">BIAŁY WŁODZIMIERZ</h2>
+          <h2 className="neon-text">BIAŁY WŁODZIMIERZ</h2>
 
           <div className="toggle-buttons">
             <button onClick={() => setShowSuggestions((prev) => !prev)}>👥 Użytkownicy</button>
