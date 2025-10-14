@@ -4,7 +4,7 @@ import AdminPanel from "./AdminPanel";
 
 function App() {
   return (
-    <Router>
+    <Router basename="/filebeam-frontend">
       <Routes>
         <Route path="/" element={<UploadForm />} />
         <Route path="/admin" element={<AdminPanel />} />
@@ -12,4 +12,5 @@ function App() {
     </Router>
   );
 }
+
 export default App;

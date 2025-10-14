@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 
 export default function AdminPanel() {
@@ -8,7 +8,7 @@ export default function AdminPanel() {
   const [files, setFiles] = useState([]);
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const res = await axios.get(`${backendUrl}/admin/users`, {
         headers: { "x-admin-password": adminPassword }
@@ -17,7 +17,11 @@ export default function AdminPanel() {
     } catch {
       alert("Błędne hasło lub brak dostępu");
     }
-  };
+  }, [adminPassword]);
+
+  useEffect(() => {
+    if (adminPassword) fetchUsers();
+  }, [fetchUsers]);
 
   const fetchFiles = async (userId) => {
     setSelectedUser(userId);
