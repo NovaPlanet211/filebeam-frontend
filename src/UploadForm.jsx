@@ -47,22 +47,31 @@ export default function UploadForm() {
   };
 
   const handleRegister = async () => {
-    if (!newLogin || !newPassword) return alert("Podaj login i hasło");
+  if (!newLogin || !newPassword) {
+    alert("Podaj login i hasło");
+    return;
+  }
 
-    try {
-      await axios.post(`${backendUrl}/register`, {
-        username: newLogin,
-        password: newPassword
-      });
-      alert("Użytkownik zarejestrowany!");
-      setUserId(newLogin);
-      setNewLogin("");
-      setNewPassword("");
-      fetchSuggestedUsers();
-    } catch {
+  try {
+    await axios.post(`${backendUrl}/register`, {
+      username: newLogin,
+      password: newPassword,
+    });
+
+    alert("Użytkownik zarejestrowany!");
+    setUserId(newLogin);
+    setNewLogin("");
+    setNewPassword("");
+    fetchSuggestedUsers();
+  } catch (err) {
+    if (err.response?.status === 409) {
+      alert("Taki użytkownik już istnieje");
+    } else {
       alert("Nie udało się zarejestrować");
     }
-  };
+  }
+};
+
 
   const fetchFiles = useCallback(async () => {
     try {
@@ -130,7 +139,7 @@ export default function UploadForm() {
 </div>
 
 
-      <h2 className="flashing-text">Biały Włodzimierz</h2>
+      <h2 className="neon-text">BIAŁY WŁODZIMIERZ</h2>
 
       {showSuggestions && (
         <>
