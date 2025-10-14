@@ -15,7 +15,7 @@ export default function UploadForm() {
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [showRegister, setShowRegister] = useState(true); // domyślnie otwarty
+  const [showRegister, setShowRegister] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
 
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
@@ -54,8 +54,6 @@ export default function UploadForm() {
       alert("Podaj login i hasło");
       return;
     }
-    localStorage.setItem("userId", loginUsername);
-    localStorage.setItem("isLoggedIn", "true");
 
     try {
       const res = await axios.post(`${backendUrl}/login`, {
@@ -63,15 +61,22 @@ export default function UploadForm() {
         password: loginPassword,
       });
 
+      // zakładamy sukces jeśli status 200
       alert("Zalogowano");
       setUserId(loginUsername);
       setIsLoggedIn(true);
+      localStorage.setItem("userId", loginUsername);
+      localStorage.setItem("isLoggedIn", "true");
       setLoginUsername("");
       setLoginPassword("");
       setShowLogin(false);
       fetchFiles();
     } catch (err) {
-      alert("Nie udało się zalogować");
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        alert("Nieprawidłowy login lub hasło");
+      } else {
+        alert("Nie udało się zalogować");
+      }
     }
   };
 
@@ -80,8 +85,6 @@ export default function UploadForm() {
       alert("Podaj login i hasło");
       return;
     }
-    localStorage.setItem("userId", newLogin);
-    localStorage.setItem("isLoggedIn", "true");
 
     try {
       await axios.post(`${backendUrl}/register`, {
@@ -92,10 +95,13 @@ export default function UploadForm() {
       alert("Użytkownik zarejestrowany!");
       setUserId(newLogin);
       setIsLoggedIn(true);
+      localStorage.setItem("userId", newLogin);
+      localStorage.setItem("isLoggedIn", "true");
       setNewLogin("");
       setNewPassword("");
       setShowRegister(false);
       fetchSuggestedUsers();
+      fetchFiles();
     } catch (err) {
       if (err.response?.status === 409) {
         alert("Taki użytkownik już istnieje");
@@ -104,15 +110,22 @@ export default function UploadForm() {
       }
     }
   };
+
   const handleLogout = () => {
-  localStorage.removeItem("userId");
-  localStorage.removeItem("isLoggedIn");
-  setUserId("");
-  setIsLoggedIn(false);
-  setShowRegister(true); 
+    localStorage.removeItem("userId");
+    localStorage.removeItem("isLoggedIn");
+    setUserId("");
+    setIsLoggedIn(false);
+    setShowRegister(true);
+    setFiles([]);
   };
 
   const fetchFiles = useCallback(async () => {
+    if (!userId) {
+      setFiles([]);
+      return;
+    }
+
     try {
       const res = await axios.get(`${backendUrl}/files/${userId}`);
       setFiles(res.data);
@@ -131,15 +144,17 @@ export default function UploadForm() {
       console.error("Nie udało się pobrać użytkowników");
     }
   };
-  useEffect(() => {
-  const storedUser = localStorage.getItem("userId");
-  const storedLogin = localStorage.getItem("isLoggedIn");
 
-  if (storedUser && storedLogin === "true") {
-    setUserId(storedUser);
-    setIsLoggedIn(true);
-  }
-}, []);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("userId");
+    const storedLogin = localStorage.getItem("isLoggedIn");
+
+    if (storedUser && storedLogin === "true") {
+      setUserId(storedUser);
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   useEffect(() => {
     if (userId) fetchFiles();
   }, [fetchFiles, userId]);
@@ -206,27 +221,31 @@ export default function UploadForm() {
               <button onClick={() => setShowLogin(true)}>Logowanie</button>
             </div>
             <p style={{ textAlign: "center", marginTop: "40px" }}>
-                Zarejestruj się lub zaloguj, aby przesyłać pliki
+              Zarejestruj się lub zaloguj, aby przesyłać pliki
             </p>
           </div>
         </>
       ) : (
         <div className={`upload-form ${darkMode ? "dark" : ""}`}>
-          <div className="theme-toggle">
+          <div className="theme-toggle" style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <button onClick={() => setDarkMode((prev) => !prev)}>
               {darkMode ? "☀️ Tryb jasny" : "🌙 Tryb ciemny"}
             </button>
-          <button onClick={handleLogout} style={{ marginBottom: "20px" }}>
-             Wyloguj
-        </button>
+            <button onClick={handleLogout} style={{ marginLeft: 8 }}>
+              Wyloguj
+            </button>
           </div>
 
           <h2 className="neon-text">BIAŁY WŁODZIMIERZ</h2>
 
+          <p style={{ marginTop: 10, fontWeight: "bold" }}>
+            👤 Zalogowany jako: <span style={{ color: "#00e0ff" }}>{userId}</span>
+          </p>
+
           <div className="toggle-buttons">
             <button onClick={() => setShowSuggestions((prev) => !prev)}>👥 Użytkownicy</button>
           </div>
-        
+
           {showSuggestions && (
             <>
               <h3>👥 Wybierz istniejącego użytkownika:</h3>
@@ -245,15 +264,16 @@ export default function UploadForm() {
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
             placeholder="Wpisz nazwę użytkownika"
+            style={{ marginTop: 12 }}
           />
 
-          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+          <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "block", marginTop: 12 }} />
 
-          <button onClick={handleUpload} disabled={loading}>
+          <button onClick={handleUpload} disabled={loading} style={{ marginTop: 12 }}>
             {loading ? "Wysyłanie..." : "Wyślij"}
           </button>
 
-          <h3>📄 Pliki użytkownika 📄: {userId}</h3>
+          <h3 style={{ marginTop: 18 }}>📄 Pliki użytkownika 📄: {userId}</h3>
           <ul>
             {files.map((file, index) => {
               const fileUrl = `${backendUrl}/files/${userId}/${file}`;
@@ -282,4 +302,5 @@ export default function UploadForm() {
     </>
   );
 }
+
 
