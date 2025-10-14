@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useCallback } from "react";
 import axios from "axios";
 
 export default function UploadForm() {
@@ -28,19 +29,31 @@ export default function UploadForm() {
       setLoading(false);
     }
   };
+const handleDelete = async (fileName) => {
+  try {
+    await axios.delete(`${backendUrl}/files/${userId}/${fileName}`);
+    alert("Plik usunięty!");
+    fetchFiles(); // odśwież listę
+  } catch (err) {
+    console.error("Błąd przy usuwaniu:", err);
+    alert("Nie udało się usunąć pliku");
+  }
+};
 
-  const fetchFiles = async () => {
-    try {
-      const res = await axios.get(`${backendUrl}/files/${userId}`);
-      setFiles(res.data);
-    } catch (err) {
-      console.error("Błąd przy pobieraniu plików:", err);
-    }
-  };
+
+
+const fetchFiles = useCallback(async () => {
+  try {
+    const res = await axios.get(`${backendUrl}/files/${userId}`);
+    setFiles(res.data);
+  } catch (err) {
+    console.error("Błąd przy pobieraniu plików:", err);
+  }
+}, [backendUrl, userId]);
 
   useEffect(() => {
-    fetchFiles();
-  }, [userId]);
+  fetchFiles();
+}, [fetchFiles]);
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
@@ -49,10 +62,13 @@ export default function UploadForm() {
       <input type="file" onChange={(e) => setFile(e.target.files[0])} />
       <br /><br />
 
-      <select value={userId} onChange={(e) => setUserId(e.target.value)}>
-        <option value="dom">Komputer domowy</option>
-        <option value="nova">Nova</option>
-      </select>
+      <input
+  type="text"
+  value={userId}
+  onChange={(e) => setUserId(e.target.value)}
+  placeholder="Wpisz nazwę użytkownika"
+/>
+
       <br /><br />
 
       <button onClick={handleUpload} disabled={loading}>
@@ -60,11 +76,33 @@ export default function UploadForm() {
       </button>
 
       <h3>📄 Pliki użytkownika: {userId}</h3>
-      <ul>
-        {files.map((file, index) => (
-          <li key={index}>{file}</li>
-        ))}
-      </ul>
+<ul>
+  {files.map((file, index) => {
+    const fileUrl = `${backendUrl}/files/${userId}/${file}`;
+    const isImage = /\.(jpg|jpeg|png)$/i.test(file);
+
+    return (
+      <li key={index}>
+        {file}
+        {isImage && (
+          <div>
+            <img
+              src={fileUrl}
+              alt={file}
+              style={{ maxWidth: "150px", marginTop: "5px" }}
+            />
+          </div>
+        )}
+        <a href={fileUrl} download>
+          <button>Pobierz</button>
+        </a>
+        <button onClick={() => handleDelete(file)}>Usuń</button>
+      </li>
+    );
+  })}
+</ul>
+
+
     </div>
   );
 }
