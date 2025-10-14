@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import "./UploadForm.css";
 
 export default function UploadForm() {
   const [file, setFile] = useState(null);
@@ -66,11 +67,10 @@ export default function UploadForm() {
   }, [fetchFiles, userId]);
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+    <div className="upload-form">
       <h2>📁 FileBeam Web</h2>
 
       <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-      <br /><br />
 
       <input
         type="text"
@@ -88,8 +88,6 @@ export default function UploadForm() {
       />
       <button onClick={handleRegister}>Zarejestruj</button>
 
-      <br /><br />
-
       <button onClick={handleUpload} disabled={loading}>
         {loading ? "Wysyłanie..." : "Wyślij"}
       </button>
@@ -103,19 +101,7 @@ export default function UploadForm() {
           return (
             <li key={index}>
               {file}
-              {isImage && (
-                <div style={{
-                  maxWidth: "600px",
-                  margin: "0 auto",
-                  padding: "20px",
-                  fontFamily: "Arial",
-                  backgroundColor: "#f9f9f9",
-                  borderRadius: "10px",
-                  boxShadow: "0 0 10px rgba(0,0,0,0.1)"
-                }}>
-                  <img src={fileUrl} alt={file} style={{ maxWidth: "100%" }} />
-                </div>
-              )}
+              {isImage && <img src={fileUrl} alt={file} />}
               <a href={fileUrl} download>
                 <button>Pobierz</button>
               </a>
@@ -124,7 +110,12 @@ export default function UploadForm() {
           );
         })}
       </ul>
+
+      <a href="#/admin">
+        <button style={{ backgroundColor: "#444", marginTop: "30px" }}>
+          🔐 Przejdź do panelu admina
+        </button>
+      </a>
     </div>
   );
 }
-
