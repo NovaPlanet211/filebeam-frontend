@@ -130,7 +130,7 @@ export default function UploadForm() {
 </div>
 
 
-      <h2>Biały Włodzimierz</h2>
+      <p className="flashing-text">Biały włodzimierz</p>
 
       {showSuggestions && (
         <>
