@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/filebeam-frontend/static/css/main.e6c13ad2.css",
+    "main.js": "/filebeam-frontend/static/js/main.df561375.js",
+    "static/js/453.cf3fec00.chunk.js": "/filebeam-frontend/static/js/453.cf3fec00.chunk.js",
+    "index.html": "/filebeam-frontend/index.html",
+    "main.e6c13ad2.css.map": "/filebeam-frontend/static/css/main.e6c13ad2.css.map",
+    "main.df561375.js.map": "/filebeam-frontend/static/js/main.df561375.js.map",
+    "453.cf3fec00.chunk.js.map": "/filebeam-frontend/static/js/453.cf3fec00.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.df561375.js"
+  ]
+}
