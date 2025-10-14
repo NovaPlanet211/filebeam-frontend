@@ -126,9 +126,9 @@
 
 .upload-form button {
   margin-top: 20px;
-  padding: 16px 24px;
-  font-size: 16px;
-  background-color: #0078d4;
+  padding: 10px 20px;
+  font-size: 12px;
+  background-color: #a3a3a3;
   color: white;
   border: none;
   border-radius: 8px;
@@ -137,7 +137,7 @@
 }
 
 .upload-form button:hover {
-  background-color: #005ea2;
+  background-color: #40474d;
 }
 
 .upload-form h3 {
