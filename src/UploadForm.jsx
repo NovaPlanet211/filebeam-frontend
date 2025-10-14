@@ -15,7 +15,7 @@ export default function UploadForm() {
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
+  const [showRegister, setShowRegister] = useState(true); // domyślnie otwarty
   const [showLogin, setShowLogin] = useState(false);
 
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
@@ -48,55 +48,58 @@ export default function UploadForm() {
       alert("Nie udało się usunąć pliku");
     }
   };
-const handleLogin = async () => {
-  if (!loginUsername || !loginPassword) {
-    alert("Podaj login i hasło");
-    return;
-  }
 
-  try {
-    const res = await axios.post(`${backendUrl}/login`, {
-      username: loginUsername,
-      password: loginPassword,
-    });
+  const handleLogin = async () => {
+    if (!loginUsername || !loginPassword) {
+      alert("Podaj login i hasło");
+      return;
+    }
 
-    alert("Zalogowano");
-    setUserId(loginUsername);
-    setIsLoggedIn(true);
-    setLoginUsername("");
-    setLoginPassword("");
-    fetchFiles();
-  } catch (err) {
-    alert("Nie udało się zalogować");
-  }
-};
+    try {
+      const res = await axios.post(`${backendUrl}/login`, {
+        username: loginUsername,
+        password: loginPassword,
+      });
+
+      alert("Zalogowano");
+      setUserId(loginUsername);
+      setIsLoggedIn(true);
+      setLoginUsername("");
+      setLoginPassword("");
+      setShowLogin(false);
+      fetchFiles();
+    } catch (err) {
+      alert("Nie udało się zalogować");
+    }
+  };
 
   const handleRegister = async () => {
-  if (!newLogin || !newPassword) {
-    alert("Podaj login i hasło");
-    return;
-  }
-
-  try {
-    await axios.post(`${backendUrl}/register`, {
-      username: newLogin,
-      password: newPassword,
-    });
-
-    alert("Użytkownik zarejestrowany!");
-    setUserId(newLogin);
-    setNewLogin("");
-    setNewPassword("");
-    fetchSuggestedUsers();
-  } catch (err) {
-    if (err.response?.status === 409) {
-      alert("Taki użytkownik już istnieje");
-    } else {
-      alert("Nie udało się zarejestrować");
+    if (!newLogin || !newPassword) {
+      alert("Podaj login i hasło");
+      return;
     }
-  }
-};
 
+    try {
+      await axios.post(`${backendUrl}/register`, {
+        username: newLogin,
+        password: newPassword,
+      });
+
+      alert("Użytkownik zarejestrowany!");
+      setUserId(newLogin);
+      setIsLoggedIn(true);
+      setNewLogin("");
+      setNewPassword("");
+      setShowRegister(false);
+      fetchSuggestedUsers();
+    } catch (err) {
+      if (err.response?.status === 409) {
+        alert("Taki użytkownik już istnieje");
+      } else {
+        alert("Nie udało się zarejestrować");
+      }
+    }
+  };
 
   const fetchFiles = useCallback(async () => {
     try {
@@ -110,7 +113,7 @@ const handleLogin = async () => {
   const fetchSuggestedUsers = async () => {
     try {
       const res = await axios.get(`${backendUrl}/admin/users`, {
-        headers: { "x-admin-password": "BadMojo2008" }
+        headers: { "x-admin-password": "BadMojo2008" },
       });
       setSuggestedUsers(res.data);
     } catch {
@@ -125,126 +128,136 @@ const handleLogin = async () => {
   useEffect(() => {
     fetchSuggestedUsers();
   }, []);
+
   useEffect(() => {
     document.body.classList.toggle("dark-mode", darkMode);
   }, [darkMode]);
 
   return (
-    <div className={`upload-form ${darkMode ? "dark" : ""}`}>
-      <div className="toggle-buttons">
-        <button onClick={() => setShowSuggestions((prev) => !prev)}>👥 Użytkownicy</button>
-        <button onClick={() => setShowRegister((prev) => !prev)}>🔐 Rejestracja</button>
-      </div>
-<button onClick={() => setShowLogin((prev) => !prev)}>🔑 Logowanie</button>
-
-      {showRegister && (
-  <div className="register-overlay">
-    <div className="register-content">
-      <button className="close-btn" onClick={() => setShowRegister(false)}>Zamknij</button>
-      <h2>🔐 Rejestracja użytkownika</h2>
-      <input
-        type="text"
-        value={newLogin}
-        onChange={(e) => setNewLogin(e.target.value)}
-        placeholder="Login"
-      />
-      <input
-        type="password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-        placeholder="Hasło"
-      />
-      <button onClick={handleRegister}>Zarejestruj</button>
-    </div>
-  </div>
-)}
-<div className="register-overlay">
-  <div className="register-content">
-    <h2>🔑 Logowanie</h2>
-    <input
-      type="text"
-      value={loginUsername}
-      onChange={(e) => setLoginUsername(e.target.value)}
-      placeholder="Login"
-    />
-    <input
-      type="password"
-      value={loginPassword}
-      onChange={(e) => setLoginPassword(e.target.value)}
-      placeholder="Hasło"
-    />
-    <button onClick={handleLogin}>Zaloguj</button>
-  </div>
-</div>
-
-<div className="theme-toggle">
-  <button onClick={() => setDarkMode((prev) => !prev)}>
-    {darkMode ? "☀️ Tryb jasny" : "🌙 Tryb ciemny"}
-  </button>
-</div>
-
-
-      <h2 className="neon-text">BIAŁY WŁODZIMIERZ</h2>
-
-      {showSuggestions && (
+    <>
+      {!isLoggedIn ? (
         <>
-          <h3>👥 Wybierz istniejącego użytkownika:</h3>
-          <div className="suggestions">
-            {suggestedUsers.map((user) => (
-              <button key={user} onClick={() => setUserId(user)}>
-                {user}
-              </button>
-            ))}
+          {showRegister && (
+            <div className="register-overlay">
+              <div className="register-content">
+                <button className="close-btn" onClick={() => setShowRegister(false)}>Zamknij</button>
+                <h2>🔐 Rejestracja użytkownika</h2>
+                <input
+                  type="text"
+                  value={newLogin}
+                  onChange={(e) => setNewLogin(e.target.value)}
+                  placeholder="Login"
+                />
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Hasło"
+                />
+                <button onClick={handleRegister}>Zarejestruj</button>
+              </div>
+            </div>
+          )}
+
+          {showLogin && (
+            <div className="register-overlay">
+              <div className="register-content">
+                <button className="close-btn" onClick={() => setShowLogin(false)}>Zamknij</button>
+                <h2>🔑 Logowanie</h2>
+                <input
+                  type="text"
+                  value={loginUsername}
+                  onChange={(e) => setLoginUsername(e.target.value)}
+                  placeholder="Login"
+                />
+                <input
+                  type="password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="Hasło"
+                />
+                <button onClick={handleLogin}>Zaloguj</button>
+              </div>
+            </div>
+          )}
+
+          <div className="upload-form">
+            <div className="toggle-buttons">
+              <button onClick={() => setShowRegister(true)}>🔐 Rejestracja</button>
+              <button onClick={() => setShowLogin(true)}>🔑 Logowanie</button>
+            </div>
+            <p style={{ textAlign: "center", marginTop: "40px" }}>
+              🔒 Zarejestruj się lub zaloguj, aby przesyłać pliki
+            </p>
           </div>
         </>
+      ) : (
+        <div className={`upload-form ${darkMode ? "dark" : ""}`}>
+          <div className="theme-toggle">
+            <button onClick={() => setDarkMode((prev) => !prev)}>
+              {darkMode ? "☀️ Tryb jasny" : "🌙 Tryb ciemny"}
+            </button>
+          </div>
+
+          <h2 className="neon-text">BIAŁY WŁODZIMIERZ</h2>
+
+          <div className="toggle-buttons">
+            <button onClick={() => setShowSuggestions((prev) => !prev)}>👥 Użytkownicy</button>
+          </div>
+
+          {showSuggestions && (
+            <>
+              <h3>👥 Wybierz istniejącego użytkownika:</h3>
+              <div className="suggestions">
+                {suggestedUsers.map((user) => (
+                  <button key={user} onClick={() => setUserId(user)}>
+                    {user}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
+          <input
+            type="text"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            placeholder="Wpisz nazwę użytkownika"
+          />
+
+          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+
+          <button onClick={handleUpload} disabled={loading}>
+            {loading ? "Wysyłanie..." : "Wyślij"}
+          </button>
+
+          <h3>📄 Pliki użytkownika 📄: {userId}</h3>
+          <ul>
+            {files.map((file, index) => {
+              const fileUrl = `${backendUrl}/files/${userId}/${file}`;
+              const isImage = /\.(jpg|jpeg|png)$/i.test(file);
+
+              return (
+                <li key={index}>
+                  {file}
+                  {isImage && <img src={fileUrl} alt={file} />}
+                  <a href={fileUrl} download>
+                    <button>Pobierz</button>
+                  </a>
+                  <button onClick={() => handleDelete(file)}>Usuń</button>
+                </li>
+              );
+            })}
+          </ul>
+
+          <a href="#/admin">
+            <button style={{ backgroundColor: "#444", marginTop: "30px" }}>
+              Przejdź do panelu admina
+            </button>
+          </a>
+        </div>
       )}
-
-      <input
-        type="text"
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
-        placeholder="Wpisz nazwę użytkownika"
-      />
-
-      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-
-      <button onClick={handleUpload} disabled={loading}>
-        {loading ? "Wysyłanie..." : "Wyślij"}
-      </button>
-
-      <h3>📄 Pliki użytkownika 📄: {userId}</h3>
-      <ul>
-        {files.map((file, index) => {
-          const fileUrl = `${backendUrl}/files/${userId}/${file}`;
-          const isImage = /\.(jpg|jpeg|png)$/i.test(file);
-
-          return (
-            <li key={index}>
-              {file}
-              {isImage && <img src={fileUrl} alt={file} />}
-              <a href={fileUrl} download>
-                <button>Pobierz</button>
-              </a>
-              <button onClick={() => handleDelete(file)}>Usuń</button>
-            </li>
-          );
-        })}
-      </ul>
-      {isLoggedIn ? (
-  <>
-    {/* upload, pliki, itd. */}
-  </>
-) : (
-  <p style={{ textAlign: "center", marginTop: "40px" }}>
-     Zaloguj się, aby przesyłać pliki
-  </p>
-)}
-
-      <a href="#/admin">
-        <button style={{ backgroundColor: "#444", marginTop: "30px" }}>
-          Przejdź do panelu admina
-        </button>
-      </a>
-    </div>
+    </>
   );
 }
+``
