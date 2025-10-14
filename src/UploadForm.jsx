@@ -4,10 +4,10 @@ import axios from "axios";
 
 export default function UploadForm() {
   const [file, setFile] = useState(null);
-  const [userId, setUserId] = useState("dom");
+  const [newUser, setNewUser] = useState("");
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
-
+}
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
 
   const handleUpload = async () => {
@@ -38,6 +38,15 @@ const handleDelete = async (fileName) => {
     console.error("Błąd przy usuwaniu:", err);
     alert("Nie udało się usunąć pliku");
   }
+const handleRegister = async () => {
+  try {
+    await axios.post(`${backendUrl}/register`, { username: newUser });
+    alert("Użytkownik utworzony!");
+    setUserId(newUser);
+    setNewUser("");
+  } catch (err) {
+    alert("Nie udało się utworzyć użytkownika");
+  }  
 };
 
 
@@ -68,6 +77,14 @@ const fetchFiles = useCallback(async () => {
   onChange={(e) => setUserId(e.target.value)}
   placeholder="Wpisz nazwę użytkownika"
 />
+<h3>🔐 Rejestracja użytkownika</h3>
+<input
+  type="text"
+  value={newUser}
+  onChange={(e) => setNewUser(e.target.value)}
+  placeholder="Nowa nazwa użytkownika"
+/>
+<button onClick={handleRegister}>Zarejestruj</button>
 
       <br /><br />
 
