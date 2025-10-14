@@ -85,12 +85,15 @@ const fetchFiles = useCallback(async () => {
       <li key={index}>
         {file}
         {isImage && (
-          <div>
-            <img
-              src={fileUrl}
-              alt={file}
-              style={{ maxWidth: "150px", marginTop: "5px" }}
-            />
+         <div style={{
+            maxWidth: "600px",
+            margin: "0 auto",
+            padding: "20px",
+            fontFamily: "Arial",
+            backgroundColor: "#f9f9f9",
+            borderRadius: "10px",
+            boxShadow: "0 0 10px rgba(0,0,0,0.1)"
+              }}>
           </div>
         )}
         <a href={fileUrl} download>
