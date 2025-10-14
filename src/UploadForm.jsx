@@ -118,7 +118,7 @@ export default function UploadForm() {
         </div>
       )}
 
-      <h2>📁 FileBeam Web</h2>
+      <h2>SantaManta</h2>
 
       {showSuggestions && (
         <>
@@ -146,7 +146,7 @@ export default function UploadForm() {
         {loading ? "Wysyłanie..." : "Wyślij"}
       </button>
 
-      <h3>📄 Pliki użytkownika: {userId}</h3>
+      <h3>📄 Pliki użytkownika 📄: {userId}</h3>
       <ul>
         {files.map((file, index) => {
           const fileUrl = `${backendUrl}/files/${userId}/${file}`;
@@ -167,7 +167,7 @@ export default function UploadForm() {
 
       <a href="#/admin">
         <button style={{ backgroundColor: "#444", marginTop: "30px" }}>
-          🔐 Przejdź do panelu admina
+          Przejdź do panelu admina
         </button>
       </a>
     </div>
