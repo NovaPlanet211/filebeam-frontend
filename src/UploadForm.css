@@ -74,8 +74,8 @@
 /* Przycisk zamknięcia */
 .close-btn {
   position: absolute;
-  top: 16px;
-  right: 20px;
+  top: -10px;
+  right: 15px;
   background: none;
   border: none;
   font-size: 20px;
