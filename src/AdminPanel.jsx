@@ -97,7 +97,6 @@ const AdminPanel = () => {
       </button>
     </div>
   );
-};
 {selectedUser && (
   <>
     <h3 style={{ marginTop: "20px" }}>📄 Pliki użytkownika: {selectedUser}</h3>
@@ -126,5 +125,5 @@ const AdminPanel = () => {
     </div>
   );
 
-}
-
+};
+export default AdminPanel;
