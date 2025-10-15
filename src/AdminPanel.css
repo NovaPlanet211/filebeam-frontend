@@ -1,12 +1,21 @@
-body {
+/* 1. Gradient na całe tło */
+html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
   background-color: rgba(89, 131, 252, 1);
   background-image: radial-gradient(circle, rgba(89, 131, 252, 1) 33%, rgba(41, 53, 86, 1) 63%);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   font-family: "Segoe UI", sans-serif;
   animation: pulseBackground 6s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* 2. Animacja tła */
 @keyframes pulseBackground {
   0%, 100% {
     background-size: 100%;
@@ -16,9 +25,10 @@ body {
   }
 }
 
+/* 3. Panel admina wyśrodkowany */
 .admin-panel {
+  width: 90%;
   max-width: 800px;
-  margin: 40px auto;
   padding: 30px;
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
@@ -29,6 +39,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/* Animacja wejścia */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -40,6 +51,7 @@ body {
   }
 }
 
+/* Pozostałe style (jak wcześniej) */
 .admin-panel h2 {
   font-size: 32px;
   margin-bottom: 20px;
@@ -53,9 +65,8 @@ body {
   font-size: 16px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
-  margin-right: 10px;
-  margin-top: 10px;
-  width: 260px;
+  margin: 10px 0;
+  width: 100%;
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
