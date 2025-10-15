@@ -17,15 +17,14 @@ export default function UploadForm() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showRegister, setShowRegister] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
+  const [modalClosing, setModalClosing] = useState(false);
 
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
 
   const handleUpload = async () => {
     if (!file || !userId) return alert("Wybierz plik i użytkownika");
-
     const formData = new FormData();
     formData.append("file", file);
-
     setLoading(true);
     try {
       await axios.post(`${backendUrl}/upload/${userId}`, formData);
@@ -50,17 +49,12 @@ export default function UploadForm() {
   };
 
   const handleLogin = async () => {
-    if (!loginUsername || !loginPassword) {
-      alert("Podaj login i hasło");
-      return;
-    }
-
+    if (!loginUsername || !loginPassword) return alert("Podaj login i hasło");
     try {
       const res = await axios.post(`${backendUrl}/login`, {
         username: loginUsername,
         password: loginPassword,
       });
-
       if (res.status === 200) {
         setUserId(loginUsername);
         setIsLoggedIn(true);
@@ -68,7 +62,7 @@ export default function UploadForm() {
         localStorage.setItem("isLoggedIn", "true");
         setLoginUsername("");
         setLoginPassword("");
-        setShowLogin(false);
+        closeModalSmooth(setShowLogin);
         fetchFiles();
         alert("Zalogowano");
       } else {
@@ -84,17 +78,12 @@ export default function UploadForm() {
   };
 
   const handleRegister = async () => {
-    if (!newLogin || !newPassword) {
-      alert("Podaj login i hasło");
-      return;
-    }
-
+    if (!newLogin || !newPassword) return alert("Podaj login i hasło");
     try {
       const res = await axios.post(`${backendUrl}/register`, {
         username: newLogin,
         password: newPassword,
       });
-
       if (res.status === 200 || res.status === 201) {
         setUserId(newLogin);
         setIsLoggedIn(true);
@@ -102,7 +91,7 @@ export default function UploadForm() {
         localStorage.setItem("isLoggedIn", "true");
         setNewLogin("");
         setNewPassword("");
-        setShowRegister(false);
+        closeModalSmooth(setShowRegister);
         fetchSuggestedUsers();
         fetchFiles();
         alert("Użytkownik zarejestrowany!");
@@ -132,7 +121,6 @@ export default function UploadForm() {
       setFiles([]);
       return;
     }
-
     try {
       const res = await axios.get(`${backendUrl}/files/${userId}`);
       setFiles(res.data);
@@ -155,7 +143,6 @@ export default function UploadForm() {
   useEffect(() => {
     const storedUser = localStorage.getItem("userId");
     const storedLogin = localStorage.getItem("isLoggedIn");
-
     if (storedUser && storedLogin === "true") {
       setUserId(storedUser);
       setIsLoggedIn(true);
@@ -174,14 +161,22 @@ export default function UploadForm() {
     document.body.classList.toggle("dark-mode", darkMode);
   }, [darkMode]);
 
+  const closeModalSmooth = (setter) => {
+    setModalClosing(true);
+    setTimeout(() => {
+      setter(false);
+      setModalClosing(false);
+    }, 240);
+  };
+
   return (
-    <>
+    <div className="main-content">
       {!isLoggedIn ? (
         <>
           {showRegister && (
             <div className="register-overlay">
-              <div className="register-content">
-                <button className="close-btn" onClick={() => setShowRegister(false)}>X</button>
+              <div className={`register-content ${modalClosing ? "closing" : ""}`}>
+                <button className="close-btn" onClick={() => closeModalSmooth(setShowRegister)}>✕</button>
                 <h2>Rejestracja użytkownika</h2>
                 <input
                   type="text"
@@ -202,8 +197,8 @@ export default function UploadForm() {
 
           {showLogin && (
             <div className="register-overlay">
-              <div className="register-content">
-                <button className="close-btn" onClick={() => setShowLogin(false)}>X</button>
+              <div className={`register-content ${modalClosing ? "closing" : ""}`}>
+                <button className="close-btn" onClick={() => closeModalSmooth(setShowLogin)}>✕</button>
                 <h2>Logowanie</h2>
                 <input
                   type="text"
@@ -227,7 +222,7 @@ export default function UploadForm() {
               <button onClick={() => setShowRegister(true)}>Rejestracja</button>
               <button onClick={() => setShowLogin(true)}>Logowanie</button>
             </div>
-            <p style={{ textAlign: "center", marginTop: "40px" }}>
+            <p style={{ textAlign: "center", marginTop: "20px" }}>
               Zarejestruj się lub zaloguj, aby przesyłać pliki
             </p>
           </div>
@@ -243,9 +238,9 @@ export default function UploadForm() {
             </button>
           </div>
 
-          <h2 className="neon-text">BIAŁY WŁODZIMIERZ</h2>
+          <h2 className="rainbowFlash">BIAŁY WŁODZIMIERZ</h2>
 
-          <p style={{ marginTop: 10, fontWeight: "bold" }}>
+          <p style={{ marginTop: 10, fontWeight: "bold", color: darkMode ? "#dff" : undefined }}>
             👤 Zalogowany jako: <span style={{ color: "#00e0ff" }}>{userId}</span>
           </p>
 
@@ -265,40 +260,39 @@ export default function UploadForm() {
               </div>
             </>
           )}
-          <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "block", marginTop: 12 }} />
 
+          <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "block", marginTop: 12 }} />
           <button onClick={handleUpload} disabled={loading} style={{ marginTop: 12 }}>
             {loading ? "Wysyłanie..." : "Wyślij"}
           </button>
 
           <h3 style={{ marginTop: 18 }}>📄 Pliki użytkownika 📄: {userId}</h3>
-          <ul>
-            {files.map((file, index) => {
-              const fileUrl = `${backendUrl}/files/${userId}/${file}`;
-              const isImage = /\.(jpg|jpeg|png)$/i.test(file);
-
+          <ul className="files-list">
+            {files.map((fileName, index) => {
+              const fileUrl = `${backendUrl}/files/${userId}/${fileName}`;
+              const isImage = /\.(jpg|jpeg|png)$/i.test(fileName);
               return (
-                <li key={index}>
-                  {file}
-                  {isImage && <img src={fileUrl} alt={file} />}
-                  <a href={fileUrl} download>
-                    <button>Pobierz</button>
-                  </a>
-                  <button onClick={() => handleDelete(file)}>Usuń</button>
+                <li key={index} className="file-item">
+                  <div className="file-info">
+                    <span className="file-name">{fileName}</span>
+                    {isImage && <img src={fileUrl} alt={fileName} className="preview" />}
+                  </div>
+                  <div className="file-actions">
+                    <a href={fileUrl} download><button className="btn-download">Pobierz</button></a>
+                    <button className="btn-delete" onClick={() => handleDelete(fileName)}>Usuń</button>
+                  </div>
                 </li>
               );
             })}
           </ul>
 
           <a href="#/admin">
-            <button style={{ backgroundColor: "#f5084fff", marginTop: "30px" }}>
+            <button style={{ backgroundColor: "#f5084fff", marginTop: "20px", color: "#fff" }}>
               Przejdź do panelu admina
             </button>
           </a>
         </div>
       )}
-    </>
+    </div>
   );
 }
-
-
