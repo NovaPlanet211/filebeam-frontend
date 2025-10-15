@@ -10,13 +10,13 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoadingDone(true);
-    }, 5000); // 2 sekundy animacji
+    }, 5000); // 5 sekund animacji
 
     return () => clearTimeout(timer);
   }, []);
 
   if (!loadingDone) {
-    return <LoadingScreen />;
+    return <LoadingScreen onFinish={() => setLoadingDone(true)} />;
   }
 
   return (
@@ -30,5 +30,6 @@ function App() {
 }
 
 export default App;
+
 
 
