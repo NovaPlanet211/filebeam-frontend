@@ -61,13 +61,13 @@
   padding: 10px 20px;
   font-size: 14px;
   background-color: #151b17;
-  color: white;
+  color: rgb(99, 99, 99);
   border: none;
-  border-radius: 15px;
+  border-radius: 16px;
   cursor: pointer;
   transition: width 2s;;
   transition: background-color 0.3s ease;
-  opacity: 0.6;
+  opacity: 0.5;
   
 }
 
@@ -82,7 +82,7 @@
   right: 15px;
   background: none;
   border: none;
-  border-radius: 15px;
+  border-radius: 16px;
   font-size: 20px;
   color: #776565;
   cursor: pointer;
