@@ -238,7 +238,7 @@ export default function UploadForm() {
             </button>
           </div>
 
-          <h2 className="rainbowFlash">BIAŁY WŁODZIMIERZ</h2>
+          <h2 className="rainbow-text">BIAŁY WŁODZIMIERZ</h2>
 
           <p style={{ marginTop: 10, fontWeight: "bold", color: darkMode ? "#dff" : undefined }}>
             👤 Zalogowany jako: <span style={{ color: "#00e0ff" }}>{userId}</span>
