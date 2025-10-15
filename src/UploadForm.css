@@ -63,11 +63,12 @@
   background-color: #151b17;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 15px;
   cursor: pointer;
   transition: width 2s;;
   transition: background-color 0.3s ease;
-  opacity: 0.4;
+  opacity: 0.6;
+  
 }
 
 .register-content button:hover {
@@ -81,6 +82,7 @@
   right: 15px;
   background: none;
   border: none;
+  border-radius: 15px;
   font-size: 20px;
   color: #776565;
   cursor: pointer;

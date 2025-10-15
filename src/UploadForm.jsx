@@ -181,7 +181,7 @@ export default function UploadForm() {
           {showRegister && (
             <div className="register-overlay">
               <div className="register-content">
-                <button className="close-btn" onClick={() => setShowRegister(false)}>Zamknij</button>
+                <button className="close-btn" onClick={() => setShowRegister(false)}>X</button>
                 <h2>Rejestracja użytkownika</h2>
                 <input
                   type="text"
@@ -203,7 +203,7 @@ export default function UploadForm() {
           {showLogin && (
             <div className="register-overlay">
               <div className="register-content">
-                <button className="close-btn" onClick={() => setShowLogin(false)}>x</button>
+                <button className="close-btn" onClick={() => setShowLogin(false)}>X</button>
                 <h2>Logowanie</h2>
                 <input
                   type="text"
