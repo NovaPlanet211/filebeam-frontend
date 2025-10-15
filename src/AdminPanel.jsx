@@ -9,6 +9,7 @@ export default function AdminPanel() {
   const [selectedUser, setSelectedUser] = useState("");
   const [files, setFiles] = useState([]);
   const [showUserList, setShowUserList] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
   const navigate = useNavigate();
 
@@ -18,6 +19,7 @@ export default function AdminPanel() {
         headers: { "x-admin-password": adminPassword }
       });
       setUsers(res.data);
+      setIsLoggedIn(true);
       setSelectedUser("");
       setFiles([]);
     } catch {
@@ -60,18 +62,36 @@ export default function AdminPanel() {
   const handleGoHome = () => {
     navigate("/");
   };
+  
+  const handleLogout = () => {
+  setIsLoggedIn(false);
+  setUsers([]);
+  setSelectedUser("");
+  setFiles([]);
+  setAdminPassword("");
+  };
 
   return (
     <div className="admin-panel">
       <h2>Panel administratora</h2>
 
-      <input
-        type="password"
-        value={adminPassword}
-        onChange={(e) => setAdminPassword(e.target.value)}
-        placeholder="Hasło administratora"
-      />
-      <button onClick={fetchUsers}>Zaloguj</button>
+      {!isLoggedIn ? (
+  <>
+    <input
+      type="password"
+      value={adminPassword}
+      onChange={(e) => setAdminPassword(e.target.value)}
+      placeholder="Hasło administratora"
+      style={{ marginRight: "10px" }}
+    />
+    <button onClick={fetchUsers}>Zaloguj</button>
+  </>
+) : (
+  <button onClick={handleLogout} style={{ backgroundColor: "#f44336", color: "white", marginBottom: "10px" }}>
+    🔓 Wyloguj
+  </button>
+)}
+
       <button onClick={handleGoHome} className="go-home-button">
         ⬅ Powrót do strony głównej
       </button>
