@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoadingDone(true);
-    }, 2000); // 2 sekundy animacji
+    }, 5000); // 2 sekundy animacji
 
     return () => clearTimeout(timer);
   }, []);
