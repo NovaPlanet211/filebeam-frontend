@@ -38,3 +38,26 @@
   0% { opacity: 1; }
   100% { opacity: 0; visibility: hidden; }
 }
+
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.logo-pop {
+  width: 100px;
+  height: auto;
+  animation: popIn 0.6s ease-out forwards;
+  opacity: 0;
+  transform: scale(0.5);
+}
+

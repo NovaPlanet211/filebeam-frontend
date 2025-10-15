@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "./LoadingScreen.css"; // styl animacji
+import logo from "./assets/logo.png"; // dostosuj ścieżkę jeśli jesteś głębiej
 
-const LoadingScreen = ({ onFinish }) => {
-  const [visible, setVisible] = useState(true);
+const LoadingScreen = () => {
+  return (
+    <div className="loading-screen">
+      <div className="logo-container">
+        <img src={logo} alt="Logo" className="logo-pop" />
+        <p className="loading-text">Ładowanie Waltera...</p>
+      </div>
+    </div>
+  );
+};
 
-  useEffect(() => {
+ useEffect(() => {
     const timer = setTimeout(() => {
       setVisible(false);
       onFinish(); // powiadom rodzica że animacja się skończyła
@@ -13,16 +22,5 @@ const LoadingScreen = ({ onFinish }) => {
     return () => clearTimeout(timer);
   }, [onFinish]);
 
-  if (!visible) return null;
-
-  return (
-    <div className="loading-screen">
-      <div className="logo-container">
-        <img src="/logo.png" alt="Logo" className="logo-pop" />
-        <p className="loading-text">Ładowanie Waltera...</p>
-      </div>
-    </div>
-  );
-};
 
 export default LoadingScreen;
