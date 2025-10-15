@@ -181,7 +181,7 @@ export default function UploadForm() {
           {showRegister && (
             <div className="register-overlay">
               <div className="register-content">
-                <button className="close-btn" onClick={() => setShowRegister(false)}>x</button>
+                <button className="close-btn" onClick={() => setShowRegister(false)}>Zamknij</button>
                 <h2>Rejestracja użytkownika</h2>
                 <input
                   type="text"
