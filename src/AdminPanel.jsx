@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminPanel() {
   const [adminPassword, setAdminPassword] = useState("");
@@ -14,14 +15,21 @@ export default function AdminPanel() {
         headers: { "x-admin-password": adminPassword }
       });
       setUsers(res.data);
-      setSelectedUser(""); // reset wyboru
-      setFiles([]); // wyczyść pliki
+      setSelectedUser(""); 
+      setFiles([]); 
     } catch {
       alert("Błędne hasło lub brak dostępu");
       setUsers([]);
     }
   }, [adminPassword]);
 
+
+const AdminPanel = () => {
+  const navigate = useNavigate();
+
+  const handleGoHome = () => {
+    };
+    navigate("/");
   const fetchFiles = async (userId) => {
     setSelectedUser(userId);
     try {
@@ -47,7 +55,7 @@ export default function AdminPanel() {
       headers: { "x-admin-password": adminPassword }
     });
     alert("Użytkownik usunięty");
-    fetchUsers(); // odśwież listę
+    fetchUsers(); 
   } catch {
     alert("Błąd przy usuwaniu użytkownika");
   }
@@ -64,6 +72,7 @@ export default function AdminPanel() {
         placeholder="Hasło administratora"
         style={{ marginRight: "10px" }}
       />
+     
       <button onClick={fetchUsers}>Zaloguj</button>
 
       {users.length > 0 && (
@@ -76,8 +85,19 @@ export default function AdminPanel() {
             ))}
           </select>
         </>
+        
       )}
-
+  return (
+    <div className="admin-panel">
+      <h1>Panel administratora</h1>
+      {/* inne elementy panelu */}
+      
+      <button onClick={handleGoHome} className="go-home-button">
+        ⬅ Powrót do strony głównej
+      </button>
+    </div>
+  );
+};
 {selectedUser && (
   <>
     <h3 style={{ marginTop: "20px" }}>📄 Pliki użytkownika: {selectedUser}</h3>
