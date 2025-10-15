@@ -8,6 +8,7 @@ export default function AdminPanel() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [files, setFiles] = useState([]);
+  const [showUserList, setShowUserList] = useState(false);
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
   const navigate = useNavigate();
 
@@ -61,7 +62,7 @@ export default function AdminPanel() {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+    <div className="admin-panel">
       <h2>Panel administratora</h2>
 
       <input
@@ -69,23 +70,41 @@ export default function AdminPanel() {
         value={adminPassword}
         onChange={(e) => setAdminPassword(e.target.value)}
         placeholder="Hasło administratora"
-        style={{ marginRight: "10px" }}
       />
       <button onClick={fetchUsers}>Zaloguj</button>
-
-      <button onClick={handleGoHome} style={{ marginLeft: "10px", backgroundColor: "#007bff", color: "white", padding: "6px 12px", border: "none", borderRadius: "4px" }}>
+      <button onClick={handleGoHome} className="go-home-button">
         ⬅ Powrót do strony głównej
       </button>
 
       {users.length > 0 && (
         <>
-          <h3 style={{ marginTop: "20px", fontSize: "24px" }}>👤</h3>
-          <select onChange={(e) => fetchFiles(e.target.value)} value={selectedUser}>
-            <option value="">-- wybierz --</option>
-            {users.map((user) => (
-              <option key={user} value={user}>{user}</option>
-            ))}
-          </select>
+          <button
+            onClick={() => setShowUserList(!showUserList)}
+            style={{
+              fontSize: "28px",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              marginTop: "20px",
+              color: "#fff"
+            }}
+            title="Kliknij, aby wybrać użytkownika"
+          >
+            👤
+          </button>
+
+          {showUserList && (
+            <select
+              onChange={(e) => fetchFiles(e.target.value)}
+              value={selectedUser}
+              className="user-dropdown"
+            >
+              <option value="">-- wybierz --</option>
+              {users.map((user) => (
+                <option key={user} value={user}>{user}</option>
+              ))}
+            </select>
+          )}
         </>
       )}
 
@@ -94,7 +113,14 @@ export default function AdminPanel() {
           <h3 style={{ marginTop: "20px" }}>📄 Pliki użytkownika: {selectedUser}</h3>
           <button
             onClick={handleDeleteUser}
-            style={{ marginBottom: "10px", backgroundColor: "#f44336", color: "white", padding: "6px 12px", border: "none", borderRadius: "4px" }}
+            style={{
+              marginBottom: "10px",
+              backgroundColor: "#f44336",
+              color: "white",
+              padding: "6px 12px",
+              border: "none",
+              borderRadius: "4px"
+            }}
           >
             🗑️ Usuń użytkownika
           </button>

@@ -12,6 +12,17 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: pulseBackground 6s ease-in-out infinite;
+}
+
+/* Animacja tła */
+@keyframes pulseBackground {
+  0%, 100% {
+    background-size: 100%;
+  }
+  50% {
+    background-size: 105%;
+  }
 }
 
 /* Panel admina na środku z cieniem i zaokrągleniem */
@@ -59,6 +70,21 @@ html, body {
   width: 100%;
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
+}
+
+/* Dropdown z animacją */
+.user-dropdown {
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: dropdownFade 0.4s ease-out forwards;
+  margin-top: 10px;
+}
+
+@keyframes dropdownFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Przyciski */
