@@ -18,8 +18,8 @@ const LoadingScreen = ({ onFinish }) => {
   return (
     <div className="loading-screen">
       <div className="logo-container">
-        <img src="/logo.svg" alt="Logo" className="logo-spin" />
-        <p className="loading-text">Ładowanie FileBeam...</p>
+        <img src="/logo.png" alt="Logo" className="logo-spin" />
+        <p className="loading-text">Ładowanie Waltera...</p>
       </div>
     </div>
   );
