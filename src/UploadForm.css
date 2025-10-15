@@ -106,7 +106,7 @@
 }
 .upload-form {
   max-width: 600px;
-  margin: 60px auto;
+  margin: auto;
   padding: 40px 30px;
   background-color: #f0f4ff;
   border-radius: 16px;
@@ -210,7 +210,7 @@
 .toggle-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 80px;
   margin-bottom: 30px;
 }
 
