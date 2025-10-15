@@ -49,7 +49,7 @@
   }
 }
 .logo-pop {
-  width: 100px;
+  width: 500px;
   height: auto;
   animation: popIn 1s ease-out forwards;
   opacity: 0;
