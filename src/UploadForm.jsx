@@ -285,7 +285,6 @@ export default function UploadForm() {
                     <button>Pobierz</button>
                   </a>
                   <button onClick={() => handleDelete(file)}>Usuń</button>
-                  <button style={{backgroundColor: "#c300ffff", marginTop: "30px"}}></button>
                 </li>
               );
             })}
