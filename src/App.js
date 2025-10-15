@@ -3,6 +3,7 @@ import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import LoadingScreen from "./LoadingScreen";
 import UploadForm from "./UploadForm";
 import AdminPanel from "./AdminPanel";
+import ScrollToTop from "./ScrollToTop";
 
 function App() {
   const [loadingDone, setLoadingDone] = useState(false);
@@ -21,15 +22,17 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<UploadForm />} />
-        <Route path="/admin" element={<AdminPanel />} />
-      </Routes>
+      <>
+        <Routes>
+          <Route path="/" element={<UploadForm />} />
+          <Route path="/admin" element={<AdminPanel />} />
+        </Routes>
+        <ScrollToTop />
+      </>
     </Router>
   );
 }
 
 export default App;
-
 
 
