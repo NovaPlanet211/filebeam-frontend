@@ -62,7 +62,7 @@ export default function AdminPanel() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h2>🛠️ Panel administratora</h2>
+      <h2>Panel administratora</h2>
 
       <input
         type="password"
@@ -79,7 +79,7 @@ export default function AdminPanel() {
 
       {users.length > 0 && (
         <>
-          <h3 style={{ marginTop: "20px" }}>👥 Wybierz użytkownika:</h3>
+          <h3 style={{ marginTop: "20px", fontSize: "24px" }}>👤</h3>
           <select onChange={(e) => fetchFiles(e.target.value)} value={selectedUser}>
             <option value="">-- wybierz --</option>
             {users.map((user) => (

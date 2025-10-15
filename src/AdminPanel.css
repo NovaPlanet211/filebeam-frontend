@@ -1,4 +1,4 @@
-/* 1. Gradient na całe tło */
+/* Tło strony z gradientem */
 html, body {
   height: 100%;
   margin: 0;
@@ -9,31 +9,20 @@ html, body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   font-family: "Segoe UI", sans-serif;
-  animation: pulseBackground 6s ease-in-out infinite;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* 2. Animacja tła */
-@keyframes pulseBackground {
-  0%, 100% {
-    background-size: 100%;
-  }
-  50% {
-    background-size: 105%;
-  }
-}
-
-/* 3. Panel admina wyśrodkowany */
+/* Panel admina na środku z cieniem i zaokrągleniem */
 .admin-panel {
   width: 90%;
   max-width: 800px;
   padding: 30px;
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
   color: #fff;
   animation: fadeIn 0.6s ease-out;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -51,7 +40,7 @@ html, body {
   }
 }
 
-/* Pozostałe style (jak wcześniej) */
+/* Nagłówek */
 .admin-panel h2 {
   font-size: 32px;
   margin-bottom: 20px;
@@ -59,6 +48,7 @@ html, body {
   text-shadow: 0 0 6px rgba(89, 131, 252, 0.6);
 }
 
+/* Pola i select */
 .admin-panel input[type="password"],
 .admin-panel select {
   padding: 10px;
@@ -71,6 +61,7 @@ html, body {
   color: #fff;
 }
 
+/* Przyciski */
 .admin-panel button {
   padding: 10px 18px;
   font-size: 15px;
@@ -97,6 +88,7 @@ html, body {
   background-color: #5a6268;
 }
 
+/* Lista plików */
 .admin-panel ul {
   list-style: none;
   padding-left: 0;
