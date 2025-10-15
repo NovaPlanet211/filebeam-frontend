@@ -265,11 +265,6 @@ export default function UploadForm() {
               </div>
             </>
           )}
-
-          <p style={{ marginTop: 12, fontWeight: "bold" }}>
-            👤 Zalogowany jako: <span style={{ color: "#00e0ff" }}>{userId}</span>
-          </p>
-
           <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "block", marginTop: 12 }} />
 
           <button onClick={handleUpload} disabled={loading} style={{ marginTop: 12 }}>
