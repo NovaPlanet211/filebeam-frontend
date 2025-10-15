@@ -33,7 +33,7 @@
 .register-content h2 {
   margin-bottom: 20px;
   font-size: 24px;
-  color: #333;
+  color: #8c3ca0;
   font-family: 'Frutiger';
 
 }
@@ -217,7 +217,7 @@
 .toggle-buttons button {
   padding: 8px 14px;
   font-size: 14px;
-  background-color: #eee;
+  background-color: #474747;
   border: none;
   border-radius: 6px;
   cursor: pointer;
