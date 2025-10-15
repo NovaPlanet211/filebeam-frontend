@@ -22,7 +22,6 @@ const LoadingScreen = ({ onFinish }) => {
     <div className="loading-screen">
       <div className="logo-container">
         <img src={logo} alt="Logo" className="logo-pop" />
-        <p className="loading-text">Ładowanie Waltera...</p>
       </div>
     </div>
   );
