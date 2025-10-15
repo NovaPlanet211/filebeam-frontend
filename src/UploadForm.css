@@ -1,391 +1,233 @@
-/* Pełnoekranowy overlay rejestracji / logowania */
+/* ---------- Global / body ---------- */
+:root {
+  --accent: #8c3ca0;
+  --accent-blue: #0078d4;
+  --text-dark: #4b4141;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Frutiger", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  background: radial-gradient(circle, rgba(89,131,252,1) 33%, rgba(41,53,86,1) 63%);
+  background-attachment: fixed;
+  background-size: cover;
+  color: #fff;
+  overflow-y: auto;
+}
+
+/* ---------- Main container ---------- */
+.main-content {
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+/* ---------- Pełnoekranowy overlay rejestracji (Twoje oryginalne kolory zachowane) ---------- */
 .register-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
+  background: linear-gradient(to bottom right, #4c4c4d, #505253);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 999;
   overflow: auto;
   padding: 24px;
-  background: linear-gradient(180deg, rgba(8,10,20,0.6) 0%, rgba(8,10,20,0.75) 100%);
-  backdrop-filter: blur(6px) saturate(120%);
-  -webkit-backdrop-filter: blur(6px) saturate(120%);
-  font-family: 'Frutiger', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  box-sizing: border-box;
 }
 
-/* Kontener formularza z dopracowanym glass effect i animacją pojawiania */
+/* Kontener formularza - zachowano bazowe kolory, dodano subtelne ulepszenia */
 .register-content {
-  width: 100%;
-  max-width: 420px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-  border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 14px;
-  padding: 30px 26px;
-  box-shadow: 0 12px 40px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-  position: relative;
+  background-color: rgb(58, 57, 57);
+  padding: 36px 28px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
   text-align: center;
-  color: #eef6ff;
-  transform-origin: center;
-  animation: contentIn 360ms cubic-bezier(.2,.9,.2,1);
-  will-change: transform, opacity;
+  position: relative;
+  animation: modalIn 320ms ease-in-out both;
+  border: 1px solid rgba(255,255,255,0.04);
 }
 
-/* Subtle inner glow for title */
+/* Animacje wejścia/wyjścia */
+@keyframes modalIn { from { opacity: 0; transform: translateY(-12px) scale(0.985); } to { opacity: 1; transform: none; } }
+@keyframes modalOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-10px) scale(0.985); } }
+.register-content.closing { animation: modalOut 220ms ease-in-out both; }
+
+/* Nagłówek */
 .register-content h2 {
-  margin: 6px 0 18px 0;
+  margin-bottom: 18px;
   font-size: 22px;
-  color: #d2f7ff;
-  text-shadow: 0 4px 18px rgba(0,160,255,0.08);
-  letter-spacing: 0.6px;
+  color: var(--accent);
+  font-family: 'Frutiger', sans-serif;
 }
 
-/* Inputs - modern, accessible */
+/* Pola formularza */
 .register-content input {
   display: block;
-  width: 100%;
-  margin: 10px 0;
-  padding: 12px 14px;
-  font-size: 15px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(8,10,20,0.25);
-  color: #eaf7ff;
-  outline: none;
-  transition: box-shadow 160ms ease, border-color 160ms ease, transform 160ms ease;
-  box-shadow: 0 2px 10px rgba(2,6,23,0.25);
+  margin: 12px auto;
+  padding: 10px 12px;
+  width: 90%;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease;
+  background: rgba(255,255,255,0.02);
+  color: #fff;
 }
-
-.register-content input::placeholder {
-  color: rgba(234,247,255,0.55);
-}
-
 .register-content input:focus {
-  border-color: rgba(0,160,255,0.9);
-  box-shadow: 0 8px 28px rgba(0,160,255,0.10);
+  border-color: var(--accent-blue);
+  outline: none;
+  box-shadow: 0 8px 22px rgba(0,120,212,0.08);
   transform: translateY(-2px);
 }
 
-/* Przycisk rejestracji / zaloguj z hover i aktywnym stanem */
+/* Przycisk rejestracji */
 .register-content button {
-  margin-top: 18px;
-  padding: 10px 18px;
-  font-size: 15px;
-  background: linear-gradient(180deg, #00b4ff, #0078d4);
-  color: white;
+  margin-top: 22px;
+  padding: 10px 20px;
+  font-size: 14px;
+  background-color: #151b17;
+  color: rgb(199, 199, 199);
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: transform 140ms ease, box-shadow 140ms ease, opacity 120ms ease;
-  box-shadow: 0 8px 24px rgba(0,120,212,0.18);
-  display: inline-block;
-  min-width: 120px;
+  transition: background-color 0.22s ease, transform 0.12s ease;
+  opacity: 0.96;
 }
-
 .register-content button:hover {
+  background-color: #1e1f2b;
   transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(0,120,212,0.22);
 }
 
-.register-content button:active {
-  transform: translateY(0);
-  box-shadow: 0 6px 16px rgba(0,120,212,0.14);
-}
-
-/* Disabled button */
-.register-content button[disabled] {
-  opacity: 0.56;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-/* Przycisk zamknięcia z delikatną animacją */
+/* Przycisk zamknięcia */
 .close-btn {
   position: absolute;
-  top: -12px;
-  right: 12px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-  border: 1px solid rgba(255,255,255,0.08);
-  width: 36px;
-  height: 36px;
+  top: -10px;
+  right: 15px;
+  background: transparent;
+  border: none;
   border-radius: 10px;
-  font-size: 16px;
-  color: #cfefff;
+  font-size: 18px;
+  color: #c6bdbd;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 160ms ease, box-shadow 160ms ease;
-  box-shadow: 0 6px 18px rgba(2,6,23,0.5);
+  transition: color 0.16s ease, transform 0.16s ease;
 }
-
 .close-btn:hover {
+  color: #fff;
   transform: rotate(12deg) scale(1.03);
-  box-shadow: 0 10px 26px rgba(2,6,23,0.6);
 }
 
-/* Animacja wejścia i wyjścia kontenera */
-@keyframes contentIn {
-  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes contentOut {
-  from { opacity: 1; transform: translateY(0) scale(1); }
-  to   { opacity: 0; transform: translateY(-8px) scale(0.98); }
-}
-
-/* Jeśli chcesz animować zamykanie, dodaj klasę .closing na .register-content i użyj tej reguły */
-.register-content.closing {
-  animation: contentOut 220ms cubic-bezier(.2,.9,.2,1) forwards;
-}
-
-/* Upload form (glass) — dopracowany */
+/* ---------- Upload form (oryginalny styl z delikatnymi ulepszeniami) ---------- */
 .upload-form {
-  max-width: 860px;
+  max-width: 720px;
   margin: 24px auto;
-  padding: 22px;
-  border-radius: 14px;
-  color: #e9f7ff;
-  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 14px 40px rgba(2,6,23,0.6);
-  backdrop-filter: blur(8px) saturate(120%);
-  -webkit-backdrop-filter: blur(8px) saturate(120%);
-  font-family: 'Frutiger', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  padding: 36px 30px;
+  background-color: #f0f4ff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  font-family: "Frutiger", sans-serif;
+  text-align: center;
+  color: var(--text-dark);
 }
 
-/* Tytuły i tekst w panelu */
+/* Dark mode */
+.upload-form.dark {
+  background-color: #3a3a3a;
+  color: #e0e0e0;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Nagłówki i pola */
 .upload-form h2 {
-  font-size: 24px;
-  margin-bottom: 12px;
-  color: #dff7ff;
-  text-shadow: 0 6px 18px rgba(0,160,255,0.04);
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: var(--text-dark);
 }
-
-/* Inputs dla upload form */
 .upload-form input[type="text"],
 .upload-form input[type="file"],
 .upload-form input[type="password"] {
   display: block;
-  margin: 10px 0;
-  padding: 12px 14px;
-  font-size: 15px;
-  width: 100%;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(255,255,255,0.02);
-  color: #eaf7ff;
-  transition: box-shadow 160ms ease, border-color 160ms ease, transform 120ms ease;
-}
-
-.upload-form input:focus {
-  border-color: rgba(0,160,255,0.9);
-  box-shadow: 0 8px 28px rgba(0,160,255,0.08);
-  transform: translateY(-2px);
-}
-
-/* Przyciski ogólne */
-.upload-form button {
-  margin-top: 12px;
-  padding: 10px 14px;
-  font-size: 14px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-  color: #eaf7ff;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: transform 120ms ease, background 120ms ease, box-shadow 120ms ease;
-  box-shadow: 0 8px 20px rgba(2,6,23,0.45);
-}
-
-.upload-form button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(2,6,23,0.55);
-}
-
-/* Files list with nicer layout */
-.files-list {
-  list-style: none;
-  padding-left: 0;
-  margin-top: 16px;
-  max-height: 520px;
-  overflow-y: auto;
-}
-
-.file-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  margin: 12px auto;
   padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-  border: 1px solid rgba(255,255,255,0.03);
-}
-
-/* File info and preview */
-.file-info {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  max-width: 64%;
-  overflow: hidden;
-}
-
-.file-name {
-  max-width: 380px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: inline-block;
-  color: #dff7ff;
-}
-
-.preview {
-  max-height: 72px;
+  font-size: 16px;
+  width: 100%;
   border-radius: 8px;
-  object-fit: cover;
-  border: 1px solid rgba(255,255,255,0.04);
+  border: 1px solid #ccc;
+  background: white;
+  box-sizing: border-box;
+}
+.upload-form.dark input[type="text"],
+.upload-form.dark input[type="file"],
+.upload-form.dark input[type="password"] {
+  background-color: #2c2c2c;
+  color: #e0e0e0;
+  border: 1px solid #555;
 }
 
-/* File action buttons */
-.file-actions button,
-.file-actions a button {
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  margin-left: 8px;
-  min-width: 84px;
-  font-weight: 600;
-}
-
-.btn-download {
-  background: linear-gradient(180deg, #6fffb0, #2ecc71);
-  color: #01210b;
-}
-
-.btn-delete {
-  background: linear-gradient(180deg, #ff8b8b, #f44336);
-  color: #fff;
-}
-
-/* Suggestions */
-.suggestions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 10px 0 6px 0;
-  justify-content: center;
-}
-
-.suggestions button {
-  padding: 8px 10px;
+/* Przycisk wysyłania */
+.upload-form button {
+  margin-top: 16px;
+  padding: 10px 18px;
   font-size: 14px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.05);
-  color: #eaf7ff;
+  background-color: #a3a3a3;
+  color: white;
+  border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: transform 120ms ease, background 120ms ease;
+  transition: background-color 0.18s ease, transform 0.12s ease;
 }
+.upload-form button:hover { background-color: #40474d; transform: translateY(-3px); }
 
-.suggestions button:hover { transform: translateY(-3px); }
+/* Lista plików i elementy */
+.upload-form h3 { margin-top: 28px; font-size: 20px; color: #444; }
+.upload-form ul { list-style: none; padding: 0; margin-top: 16px; }
+.upload-form li { padding: 12px; border-bottom: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.upload-form li img { max-width: 100%; border-radius: 8px; margin-top: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.1); }
 
-/* Toggle buttons */
-.toggle-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 12px;
+/* Przyciski w li */
+.upload-form li button {
+  margin: 6px;
+  background-color: #6f00ff;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0.9;
 }
+.upload-form li button:hover { background-color: #9e9e9e; color: #000; }
 
-/* Dark mode tweaks */
-body.dark-mode .upload-form,
-body.dark-mode .register-content {
-  background: linear-gradient(180deg, rgba(0,0,0,0.42), rgba(0,0,0,0.28));
-  border: 1px solid rgba(255,255,255,0.04);
-  color: #e6f9ff;
+/* Suggestions i toggles */
+.suggestions { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; justify-content:center; }
+.suggestions button { padding:6px 10px; font-size:13px; background-color:#eee; border:none; border-radius:6px; cursor:pointer; }
+.suggestions button:hover { background-color:#ddd; }
+
+.toggle-buttons { display:flex; justify-content:center; gap:20px; margin-bottom:20px; }
+.toggle-buttons button { padding:8px 14px; font-size:14px; background-color:#474747; border:none; border-radius:6px; cursor:pointer; color:#fff; }
+.toggle-buttons button:hover { background-color:#5a5a5a; }
+
+/* Rainbow and neon restored */
+@keyframes rainbowFlash { 0% { color: red; } 14% { color: orange; } 28% { color: yellow; } 42% { color: green; } 57% { color: blue; } 71% { color: indigo; } 85% { color: violet; } 100% { color: red; } }
+.rainbow-text { font-style: italic; font-weight: bold; animation: rainbowFlash 1.4s infinite; transition: color .3s ease; }
+
+@keyframes neonPulse {
+  0%,100% { text-shadow: 0 0 5px #fff, 0 0 10px #00f6ff, 0 0 20px #00f6ff; color:#00e0ff; }
+  50% { text-shadow: 0 0 2px #fff, 0 0 6px #00d4ff, 0 0 12px #00d4ff; color:#00cfff; }
 }
+.neon-text { font-style: italic; font-weight: bold; animation: neonPulse 1.6s infinite; transition: all .3s ease; }
 
 /* Responsive */
 @media (max-width: 720px) {
-  .register-content { padding: 18px; max-width: 92%; border-radius: 12px; }
-  .preview { max-height: 56px; }
-  .file-name { max-width: 160px; }
-  .upload-form { margin: 16px; padding: 16px; }
-}
-/* Efekt tęczowego, animowanego tekstu */
-.rainbow-text {
-  font-style: italic;
-  font-weight: bold;
-  animation: rainbowFlash 1.4s infinite;
-  transition: color 0.3s ease;
-}
-
-@keyframes rainbowFlash {
-  0%   { color: #ff004d; }
-  14%  { color: #ff7a00; }
-  28%  { color: #ffd200; }
-  42%  { color: #3ad400; }
-  57%  { color: #00d4ff; }
-  71%  { color: #5b00ff; }
-  85%  { color: #ff00c8; }
-  100% { color: #ff004d; }
-}
-
-.neon-text {
-  font-weight: 800;
-  letter-spacing: 0.6px;
-  color: #00f6ff;
-  text-shadow:
-    0 0 2px #ffffff,
-    0 0 6px rgba(0,246,255,0.9),
-    0 0 12px rgba(0,246,255,0.75),
-    0 0 24px rgba(0,160,255,0.6),
-    0 6px 40px rgba(0,100,180,0.25);
-  transition: text-shadow 220ms ease, transform 180ms ease;
-  will-change: text-shadow, transform;
-}
-
-
-@keyframes neonPulse {
-  0%, 100% {
-    text-shadow:
-      0 0 2px #fff,
-      0 0 8px rgba(0,246,255,0.95),
-      0 0 18px rgba(0,246,255,0.80),
-      0 0 36px rgba(0,160,255,0.6),
-      0 8px 48px rgba(0,100,180,0.20);
-    transform: translateY(0);
-    color: #00f6ff;
-  }
-  50% {
-    text-shadow:
-      0 0 2px #fff,
-      0 0 4px rgba(0,246,255,0.85),
-      0 0 10px rgba(0,246,255,0.65),
-      0 0 20px rgba(0,160,255,0.45),
-      0 6px 30px rgba(0,100,180,0.14);
-    transform: translateY(-2px);
-    color: #00e0ff;
-  }
-}
-
-.neon-text.pulse {
-  animation: neonPulse 1.6s ease-in-out infinite;
-}
-
-.neon-text.soft {
-  color: #9ff8ff;
-  text-shadow:
-    0 0 1px #fff,
-    0 0 6px rgba(0,246,255,0.6),
-    0 6px 18px rgba(0,100,180,0.12);
+  .register-content { padding: 20px; max-width: 92%; border-radius: 12px; }
+  .upload-form { margin: 16px; padding: 18px; }
+  .upload-form h2 { font-size: 20px; }
+  .upload-form li { align-items: flex-start; }
 }
