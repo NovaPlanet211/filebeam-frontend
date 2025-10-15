@@ -181,7 +181,7 @@ export default function UploadForm() {
           {showRegister && (
             <div className="register-overlay">
               <div className="register-content">
-                <button className="close-btn" onClick={() => setShowRegister(false)}>Zamknij</button>
+                <button className="close-btn" onClick={() => setShowRegister(false)}>x</button>
                 <h2>Rejestracja użytkownika</h2>
                 <input
                   type="text"
@@ -203,7 +203,7 @@ export default function UploadForm() {
           {showLogin && (
             <div className="register-overlay">
               <div className="register-content">
-                <button className="close-btn" onClick={() => setShowLogin(false)}>Zamknij</button>
+                <button className="close-btn" onClick={() => setShowLogin(false)}>x</button>
                 <h2>Logowanie</h2>
                 <input
                   type="text"
@@ -291,7 +291,7 @@ export default function UploadForm() {
           </ul>
 
           <a href="#/admin">
-            <button style={{ backgroundColor: "#444", marginTop: "30px" }}>
+            <button style={{ backgroundColor: "#f5084fff", marginTop: "30px" }}>
               Przejdź do panelu admina
             </button>
           </a>
