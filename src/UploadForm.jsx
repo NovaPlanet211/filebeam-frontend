@@ -238,7 +238,7 @@ export default function UploadForm() {
             <button onClick={() => setDarkMode((prev) => !prev)}>
               {darkMode ? "☀️ Tryb jasny" : "🌙 Tryb ciemny"}
             </button>
-            <button onClick={handleLogout} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <button onClick={handleLogout} style={{ display: "flex", alignItems: "center", gap:30 }}>
               Wyloguj
             </button>
           </div>
