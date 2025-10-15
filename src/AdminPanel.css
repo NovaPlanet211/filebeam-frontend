@@ -13,3 +13,86 @@
 .go-home-button:hover {
   background-color: #0056b3;
 }
+.admin-panel {
+background-color: rgba(89, 131, 252, 1);
+background-image: radial-gradient(circle, rgba(89, 131, 252, 1) 33%, rgba(41, 53, 86, 1) 63%);
+}
+.admin-panel h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.admin-panel input[type="password"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-right: 10px;
+  width: 250px;
+}
+
+.admin-panel button {
+  padding: 10px 16px;
+  font-size: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.admin-panel button:hover {
+  background-color: #0056b3;
+}
+
+.admin-panel select {
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.admin-panel ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.admin-panel li {
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.admin-panel li button {
+  margin-left: 8px;
+  background-color: #e74c3c;
+}
+
+.admin-panel li button:hover {
+  background-color: #c0392b;
+}
+
+.admin-panel a button {
+  background-color: #2ecc71;
+}
+
+.admin-panel a button:hover {
+  background-color: #27ae60;
+}
+
+.go-home-button {
+  margin-left: 10px;
+  background-color: #6c757d;
+}
+
+.go-home-button:hover {
+  background-color: #5a6268;
+}

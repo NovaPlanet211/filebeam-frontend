@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import "./AdminPanel.css";
 export default function AdminPanel() {
   const [adminPassword, setAdminPassword] = useState("");
   const [users, setUsers] = useState([]);
