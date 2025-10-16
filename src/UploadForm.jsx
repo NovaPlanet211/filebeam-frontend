@@ -28,7 +28,9 @@ export default function UploadForm() {
     formData.append("file", file);
     setLoading(true);
     try {
-      await axios.post(`${backendUrl}/upload/${userId}`, formData);
+      await axios.post(`${backendUrl}/upload/${userId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       alert("Plik wysłany!");
       setFile(null);
       fetchFiles();
@@ -124,7 +126,7 @@ export default function UploadForm() {
     }
     try {
       const res = await axios.get(`${backendUrl}/files/${userId}`);
-      setFiles(res.data);
+      setFiles(res.data || []);
     } catch {
       console.error("Błąd przy pobieraniu plików");
     }
@@ -135,7 +137,7 @@ export default function UploadForm() {
       const res = await axios.get(`${backendUrl}/admin/users`, {
         headers: { "x-admin-password": "BadMojo2008" },
       });
-      setSuggestedUsers(res.data);
+      setSuggestedUsers(res.data || []);
     } catch {
       console.error("Nie udało się pobrać użytkowników");
     }
@@ -177,8 +179,10 @@ export default function UploadForm() {
           {showRegister && (
             <div className="register-overlay">
               <div className={`register-content ${modalClosing ? "closing" : ""}`}>
-                <button className="close-btn" onClick={() => closeModalSmooth(setShowRegister)}>✕</button>
-                <h2>Rejestracja użytkownika</h2>
+                <button className="close-btn" onClick={() => closeModalSmooth(setShowRegister)}>
+                  ✕
+                </button>
+                <h2 style={{ fontSize: "clamp(18px, 2.4vw, 22px)" }}>Rejestracja użytkownika</h2>
                 <input
                   type="text"
                   value={newLogin}
@@ -199,8 +203,10 @@ export default function UploadForm() {
           {showLogin && (
             <div className="register-overlay">
               <div className={`register-content ${modalClosing ? "closing" : ""}`}>
-                <button className="close-btn" onClick={() => closeModalSmooth(setShowLogin)}>✕</button>
-                <h2>Logowanie</h2>
+                <button className="close-btn" onClick={() => closeModalSmooth(setShowLogin)}>
+                  ✕
+                </button>
+                <h2 style={{ fontSize: "clamp(18px, 2.4vw, 22px)" }}>Logowanie</h2>
                 <input
                   type="text"
                   value={loginUsername}
@@ -219,7 +225,15 @@ export default function UploadForm() {
           )}
 
           <div className="upload-form">
-            <div className="toggle-buttons">
+            <div
+              className="toggle-buttons"
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "12px",
+                justifyContent: "center",
+              }}
+            >
               <button onClick={() => setShowRegister(true)}>Rejestracja</button>
               <button onClick={() => setShowLogin(true)}>Logowanie</button>
             </div>
@@ -230,29 +244,48 @@ export default function UploadForm() {
         </>
       ) : (
         <div className={`upload-form ${darkMode ? "dark" : ""}`}>
-          <div className="theme-toggle" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div
+            className="theme-toggle"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 16,
+            }}
+          >
             <button onClick={() => setDarkMode((prev) => !prev)}>
-              {darkMode ? "☀️ Tryb jasny" : "🌙 Tryb ciemny"}
+              {darkMode ? "Tryb jasny" : "Tryb ciemny"}
             </button>
-            <button onClick={handleLogout} style={{ display: "flex", alignItems: "center", gap:30 }}>
-              Wyloguj
-            </button>
+            <button onClick={handleLogout}>Wyloguj</button>
           </div>
 
-          <h2 className="rainbow-text">BIAŁY WŁODZIMIERZ</h2>
+          <h2 style={{ fontSize: "clamp(18px, 2.2vw, 28px)", textAlign: "center" }}>
+            <span className="rainbow-text">BIAŁY WŁODZIMIERZ</span>
+          </h2>
 
           <p style={{ marginTop: 10, fontWeight: "bold", color: darkMode ? "#dff" : undefined }}>
             👤 Zalogowany jako: <span style={{ color: "#00e0ff" }}>{userId}</span>
           </p>
 
-          <div className="toggle-buttons">
+          <div
+            className="toggle-buttons"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "12px",
+              justifyContent: "center",
+              marginBottom: 12,
+            }}
+          >
             <button onClick={() => setShowSuggestions((prev) => !prev)}>👥 Użytkownicy</button>
           </div>
 
           {showSuggestions && (
             <>
-              <h3>👥 Wybierz istniejącego użytkownika:</h3>
-              <div className="suggestions">
+              <h3 style={{ marginTop: 8 }}>👥 Wybierz istniejącego użytkownika:</h3>
+              <div className="suggestions" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
                 {suggestedUsers.map((user) => (
                   <button key={user} onClick={() => setUserId(user)}>
                     {user}
@@ -262,25 +295,70 @@ export default function UploadForm() {
             </>
           )}
 
-          <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "block", marginTop: 12 }} />
+          <input
+            type="file"
+            onChange={(e) => setFile(e.target.files && e.target.files[0])}
+            style={{ display: "block", marginTop: 12 }}
+          />
           <button onClick={handleUpload} disabled={loading} style={{ marginTop: 12 }}>
             {loading ? "Wysyłanie..." : "Wyślij"}
           </button>
 
           <h3 style={{ marginTop: 18 }}>📄 Pliki użytkownika 📄: {userId}</h3>
-          <ul className="files-list">
+          <ul className="files-list" style={{ padding: 0, marginTop: 12 }}>
             {files.map((fileName, index) => {
               const fileUrl = `${backendUrl}/files/${userId}/${fileName}`;
-              const isImage = /\.(jpg|jpeg|png)$/i.test(fileName);
+              const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(fileName);
               return (
-                <li key={index} className="file-item">
-                  <div className="file-info">
-                    <span className="file-name">{fileName}</span>
-                    {isImage && <img src={fileUrl} alt={fileName} className="preview" />}
+                <li
+                  key={index}
+                  className="file-item"
+                  style={{
+                    listStyle: "none",
+                    padding: 12,
+                    borderBottom: "1px solid #ddd",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                  }}
+                >
+                  <div
+                    className="file-info"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
+                    }}
+                  >
+                    <span className="file-name" style={{ wordBreak: "break-word", color: darkMode ? "#fff" : "#333" }}>
+                      {fileName}
+                    </span>
+                    {isImage && (
+                      <img
+                        src={fileUrl}
+                        alt={fileName}
+                        className="preview"
+                        style={{ maxWidth: "100%", height: "auto", borderRadius: 8, marginTop: 8 }}
+                      />
+                    )}
                   </div>
-                  <div className="file-actions">
-                    <a href={fileUrl} download><button className="btn-download">Pobierz</button></a>
-                    <button className="btn-delete" onClick={() => handleDelete(fileName)}>Usuń</button>
+
+                  <div
+                    className="file-actions"
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 8,
+                      justifyContent: "center",
+                      marginTop: 6,
+                    }}
+                  >
+                    <a href={fileUrl} download>
+                      <button className="btn-download">Pobierz</button>
+                    </a>
+                    <button className="btn-delete" onClick={() => handleDelete(fileName)}>
+                      Usuń
+                    </button>
                   </div>
                 </li>
               );
@@ -288,7 +366,7 @@ export default function UploadForm() {
           </ul>
 
           <a href="#/admin">
-            <button style={{ backgroundColor: "#f5084fff", marginTop: "20px", color: "#fff" }}>
+            <button style={{ backgroundColor: "#f5084f", marginTop: 20, color: "#fff" }}>
               Przejdź do panelu admina
             </button>
           </a>
