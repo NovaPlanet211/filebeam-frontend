@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./UploadForm.css";
-
+import "./AdminPanel.jsx";
+  
 export default function UploadForm() {
   const [file, setFile] = useState(null);
   const [files, setFiles] = useState([]);
