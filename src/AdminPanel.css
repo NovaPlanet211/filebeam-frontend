@@ -4,7 +4,7 @@ html, body {
   margin: 0;
   padding: 0;
   background-color: rgba(89, 131, 252, 1);
-  background-image: radial-gradient(circle, rgb(146, 43, 187) 33%, rgba(41, 53, 86, 1) 63%);
+  background-image: radial-gradient(circle, rgb(39, 212, 169) 33%, rgba(41, 53, 86, 1) 63%);
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
