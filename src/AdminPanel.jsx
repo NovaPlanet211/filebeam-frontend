@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./AdminPanel.css"; // upewnij się, że to wskazuje na plik z Twoim CSS-em
 
 export default function AdminPanel() {
   const [adminPassword, setAdminPassword] = useState("");
@@ -49,24 +50,31 @@ export default function AdminPanel() {
   };
 
   const handleDeleteFile = async (fileName) => {
-    await axios.delete(`${backendUrl}/files/${selectedUser}/${fileName}`);
-    fetchFiles(selectedUser);
+    try {
+      await axios.delete(`${backendUrl}/files/${selectedUser}/${fileName}`);
+      fetchFiles(selectedUser);
+    } catch {
+      alert("Błąd przy usuwaniu pliku");
+    }
   };
 
-  const handleDeleteUser = async () => {
-    if (!selectedUser) return;
-    const confirmDelete = window.confirm(`Na pewno chcesz usunąć użytkownika "${selectedUser}"?`);
+  const handleDeleteUser = async (usernameParam) => {
+    const username = usernameParam || selectedUser;
+    if (!username) return;
+    const confirmDelete = window.confirm(`Na pewno chcesz usunąć użytkownika "${username}"?`);
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`${backendUrl}/admin/users/${selectedUser}`, {
+      await axios.delete(`${backendUrl}/admin/users/${username}`, {
         headers: { "x-admin-password": adminPassword }
       });
       alert("Użytkownik usunięty");
       fetchUsers();
       fetchPendingUsers();
-      setSelectedUser("");
-      setFiles([]);
+      if (username === selectedUser) {
+        setSelectedUser("");
+        setFiles([]);
+      }
     } catch {
       alert("Błąd przy usuwaniu użytkownika");
     }
@@ -79,6 +87,7 @@ export default function AdminPanel() {
       });
       alert(`Zatwierdzono konto: ${username}`);
       fetchPendingUsers();
+      fetchUsers();
     } catch {
       alert("Nie udało się zatwierdzić konta");
     }
@@ -98,130 +107,133 @@ export default function AdminPanel() {
   useEffect(() => {
     if (isLoggedIn) {
       fetchPendingUsers();
+      fetchUsers();
     }
-  }, [isLoggedIn, fetchPendingUsers]);
+  }, [isLoggedIn, fetchPendingUsers, fetchUsers]);
 
   return (
-    <div style={{ fontFamily: "Arial", minHeight: "100vh", backgroundColor: "#f9f9f9" }}>
+    <div className="admin-panel">
       {/* Pasek górny */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "#222",
-        color: "#fff",
-        padding: "12px 20px"
-      }}>
-        <h2 style={{ margin: 0 }}>🛡️ Panel administratora</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+        <h2>🛡️ Panel administratora</h2>
         <div style={{ position: "relative" }}>
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() => setMenuOpen((s) => !s)}
             style={{
-              background: "none",
+              background: "transparent",
               border: "none",
               color: "#fff",
-              fontSize: "20px",
-              cursor: "pointer"
+              fontSize: 20,
+              cursor: "pointer",
+              padding: 6
             }}
+            aria-label="menu"
           >
             ☰
           </button>
+
           {menuOpen && (
             <div style={{
               position: "absolute",
               right: 0,
-              top: "100%",
-              backgroundColor: "#333",
-              border: "1px solid #444",
-              borderRadius: "4px",
+              top: "110%",
+              backgroundColor: "rgba(51,51,51,0.95)",
+              border: "1px solid rgba(68,68,68,0.6)",
+              borderRadius: 8,
               overflow: "hidden",
-              minWidth: "160px"
+              minWidth: 160,
+              zIndex: 20
             }}>
-              <button onClick={() => navigate("/")} style={menuItemStyle}>🏠 Powrót do głównej</button>
-              <button onClick={handleLogout} style={menuItemStyle}>🔓 Wyloguj</button>
+              <button
+                onClick={() => { navigate("/"); setMenuOpen(false); }}
+                style={menuItemStyle}
+              >
+                🏠 Powrót
+              </button>
+              <button
+                onClick={() => { handleLogout(); setMenuOpen(false); }}
+                style={menuItemStyle}
+              >
+                🔓 Wyloguj
+              </button>
             </div>
           )}
         </div>
       </div>
 
-      {/* Zawartość */}
-      <div style={{ padding: "20px" }}>
-        {!isLoggedIn && (
-          <>
-            <input
-              type="password"
-              value={adminPassword}
-              onChange={(e) => setAdminPassword(e.target.value)}
-              placeholder="Hasło administratora"
-              style={{ marginRight: "10px", padding: "6px" }}
-            />
-            <button onClick={fetchUsers} style={{ padding: "6px 12px" }}>Zaloguj</button>
-          </>
-        )}
+      {/* Logowanie admina */}
+      {!isLoggedIn && (
+        <>
+          <input
+            type="password"
+            value={adminPassword}
+            onChange={(e) => setAdminPassword(e.target.value)}
+            placeholder="Hasło administratora"
+          />
+          <button onClick={fetchUsers}>Zaloguj</button>
+        </>
+      )}
 
-        {isLoggedIn && (
-          <>
-            <h3 style={{ marginTop: "20px" }}>👥 Wybierz użytkownika:</h3>
-            <select onChange={(e) => fetchFiles(e.target.value)} value={selectedUser}>
-              <option value="">-- wybierz --</option>
-              {users.map((user) => (
-                <option key={user} value={user}>{user}</option>
-              ))}
-            </select>
+      {/* Zawartość panelu */}
+      {isLoggedIn && (
+        <>
+          <h3 style={{ marginTop: 18 }}>👥 Wybierz użytkownika:</h3>
+          <select
+            onChange={(e) => fetchFiles(e.target.value)}
+            value={selectedUser}
+            className="user-dropdown"
+          >
+            <option value="">-- wybierz --</option>
+            {users.map((user) => (
+              <option key={user} value={user}>{user}</option>
+            ))}
+          </select>
 
-            {selectedUser && (
-              <>
-                <h3 style={{ marginTop: "20px" }}>📄 Pliki użytkownika: {selectedUser}</h3>
-                <button
-                  onClick={handleDeleteUser}
-                  style={{ marginBottom: "10px", backgroundColor: "#f44336", color: "white", padding: "6px 12px", border: "none", borderRadius: "4px" }}
-                >
-                  🗑️ Usuń użytkownika
-                </button>
-                {files.length === 0 ? (
-                  <p>Brak plików</p>
-                ) : (
-                  <ul>
-                    {files.map((file, index) => (
-                      <li key={index}>
-                        {file}
+          {selectedUser && (
+            <>
+              <h3 style={{ marginTop: 18 }}>📄 Pliki użytkownika: {selectedUser}</h3>
+              <div style={{ marginBottom: 10 }}>
+                <button onClick={() => handleDeleteUser()} className="fade-button">🗑️ Usuń użytkownika</button>
+              </div>
+
+              {files.length === 0 ? (
+                <p>Brak plików</p>
+              ) : (
+                <ul>
+                  {files.map((file, index) => (
+                    <li key={index}>
+                      <span style={{ overflow: "hidden", textOverflow: "ellipsis", maxWidth: "60%" }}>{file}</span>
+                      <div>
                         <a href={`${backendUrl}/files/${selectedUser}/${file}`} download>
-                          <button style={{ marginLeft: "10px" }}>Pobierz</button>
+                          <button className="fade-button">Pobierz</button>
                         </a>
-                        <button onClick={() => handleDeleteFile(file)} style={{ marginLeft: "5px" }}>
-                          Usuń
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </>
-            )}
+                        <button onClick={() => handleDeleteFile(file)} className="fade-button">Usuń</button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
 
-            <h3 style={{ marginTop: "30px" }}>⏳ Konta oczekujące na zatwierdzenie:</h3>
-            {pendingUsers.length === 0 ? (
-              <p>Brak kont do zatwierdzenia</p>
-            ) : (
-              <ul>
-                {pendingUsers.map((user) => (
-                  <li key={user} style={{ marginBottom: "10px" }}>
-                    <strong>{user}</strong>
-                    <button onClick={() => handleApproveUser(user)} style={{ marginLeft: "10px" }}>
-                      ✅ Zatwierdź
-                    </button>
-                    <button onClick={() => {
-                      setSelectedUser(user);
-                      handleDeleteUser();
-                    }} style={{ marginLeft: "5px", backgroundColor: "#f44336", color: "#fff" }}>
-                      🗑️ Usuń
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </>
-        )}
-      </div>
+          <h3 style={{ marginTop: 24 }}>⏳ Konta oczekujące na zatwierdzenie:</h3>
+          {pendingUsers.length === 0 ? (
+            <p>Brak kont do zatwierdzenia</p>
+          ) : (
+            <ul>
+              {pendingUsers.map((user) => (
+                <li key={user}>
+                  <strong>{user}</strong>
+                  <div>
+                    <button onClick={() => handleApproveUser(user)} className="fade-button">✅ Zatwierdź</button>
+                    <button onClick={() => handleDeleteUser(user)} className="fade-button" style={{ marginLeft: 8 }}>🗑️ Usuń</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -235,5 +247,5 @@ const menuItemStyle = {
   color: "#fff",
   textAlign: "left",
   cursor: "pointer",
-  borderBottom: "1px solid #444"
+  borderBottom: "1px solid rgba(68,68,68,0.4)"
 };
