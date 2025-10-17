@@ -115,7 +115,7 @@ export default function AdminPanel() {
     <div className="admin-panel">
       {/* Pasek górny */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-        <h2>🛡️ Panel administratora</h2>
+        <h2>Panel administratora</h2>
         <div style={{ position: "relative" }}>
           <button
             onClick={() => setMenuOpen((s) => !s)}
@@ -148,13 +148,13 @@ export default function AdminPanel() {
                 onClick={() => { navigate("/"); setMenuOpen(false); }}
                 style={menuItemStyle}
               >
-                🏠 Powrót
+                Powrót
               </button>
               <button
                 onClick={() => { handleLogout(); setMenuOpen(false); }}
                 style={menuItemStyle}
               >
-                🔓 Wyloguj
+                Wyloguj
               </button>
             </div>
           )}
@@ -244,7 +244,7 @@ const menuItemStyle = {
   padding: "10px 16px",
   background: "none",
   border: "none",
-  color: "#fff",
+  color: "#7419c9ff",
   textAlign: "left",
   cursor: "pointer",
   borderBottom: "1px solid rgba(68,68,68,0.4)"
