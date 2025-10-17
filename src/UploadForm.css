@@ -231,3 +231,80 @@ html, body {
   .upload-form h2 { font-size: 20px; }
   .upload-form li { align-items: flex-start; }
 }
+/* === RESPONSYWNOŚĆ: TELEFONY, TABLETY, MONITORY === */
+
+/* Telefony (do 480px) */
+@media (max-width: 480px) {
+  .upload-form,
+  .register-content {
+    padding: 16px;
+    font-size: 14px;
+  }
+
+  .upload-form h2,
+  .register-content h2 {
+    font-size: 18px;
+  }
+
+  .upload-form input,
+  .register-content input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .upload-form button,
+  .register-content button {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  .toggle-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .suggestions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .upload-form li {
+    align-items: flex-start;
+  }
+}
+
+/* Tablety (481px–1024px) */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .upload-form,
+  .register-content {
+    padding: 24px;
+  }
+
+  .upload-form h2,
+  .register-content h2 {
+    font-size: 22px;
+  }
+
+  .toggle-buttons {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .suggestions {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+/* Duże ekrany (powyżej 1024px) */
+@media (min-width: 1025px) {
+  .upload-form,
+  .register-content {
+    padding: 36px;
+  }
+
+  .upload-form h2,
+  .register-content h2 {
+    font-size: 28px;
+  }
+}

@@ -19,6 +19,8 @@ export default function UploadForm() {
   const [showRegister, setShowRegister] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
   const [modalClosing, setModalClosing] = useState(false);
+  const [accountType, setAccountType] = useState("standardowe");
+  const [verificationCode, setVerificationCode] = useState("");
 
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
 
@@ -81,34 +83,41 @@ export default function UploadForm() {
   };
 
   const handleRegister = async () => {
-    if (!newLogin || !newPassword) return alert("Podaj login i hasło");
-    try {
-      const res = await axios.post(`${backendUrl}/register`, {
-        username: newLogin,
-        password: newPassword,
-      });
-      if (res.status === 200 || res.status === 201) {
-        setUserId(newLogin);
-        setIsLoggedIn(true);
-        localStorage.setItem("userId", newLogin);
-        localStorage.setItem("isLoggedIn", "true");
-        setNewLogin("");
-        setNewPassword("");
-        closeModalSmooth(setShowRegister);
-        fetchSuggestedUsers();
-        fetchFiles();
-        alert("Użytkownik zarejestrowany!");
-      } else {
-        alert("Błąd rejestracji");
-      }
-    } catch (err) {
-      if (err.response?.status === 409) {
-        alert("Taki użytkownik już istnieje");
-      } else {
-        alert("Nie udało się zarejestrować");
-      }
+  if (!newLogin) return alert("Podaj login");
+  if (accountType !== "anonimowe" && !newPassword) return alert("Podaj hasło");
+  if (accountType === "zatwierdzane" && verificationCode.length !== 4) return alert("Podaj 4-cyfrowy kod");
+
+  try {
+    const res = await axios.post(`${backendUrl}/register`, {
+      username: newLogin,
+      password: accountType !== "anonimowe" ? newPassword : undefined,
+      accountType,
+      verificationCode: accountType === "zatwierdzane" ? verificationCode : undefined,
+    });
+
+    if (res.status === 200 || res.status === 201) {
+      setUserId(newLogin);
+      setIsLoggedIn(true);
+      localStorage.setItem("userId", newLogin);
+      localStorage.setItem("isLoggedIn", "true");
+      setNewLogin("");
+      setNewPassword("");
+      setVerificationCode("");
+      closeModalSmooth(setShowRegister);
+      fetchSuggestedUsers();
+      fetchFiles();
+      alert("Użytkownik zarejestrowany!");
+    } else {
+      alert("Błąd rejestracji");
     }
-  };
+  } catch (err) {
+    if (err.response?.status === 409) {
+      alert("Taki użytkownik już istnieje");
+    } else {
+      alert("Nie udało się zarejestrować");
+    }
+  }
+};
 
   const handleLogout = () => {
     localStorage.removeItem("userId");
@@ -176,29 +185,57 @@ export default function UploadForm() {
     <div className="main-content">
       {!isLoggedIn ? (
         <>
-          {showRegister && (
-            <div className="register-overlay">
-              <div className={`register-content ${modalClosing ? "closing" : ""}`}>
-                <button className="close-btn" onClick={() => closeModalSmooth(setShowRegister)}>
-                  ✕
-                </button>
-                <h2 style={{ fontSize: "clamp(18px, 2.4vw, 22px)" }}>Rejestracja użytkownika</h2>
-                <input
-                  type="text"
-                  value={newLogin}
-                  onChange={(e) => setNewLogin(e.target.value)}
-                  placeholder="Login"
-                />
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Hasło"
-                />
-                <button onClick={handleRegister}>Zarejestruj</button>
-              </div>
-            </div>
-          )}
+        {showRegister && (
+  <div className="register-overlay">
+    <div className={`register-content ${modalClosing ? "closing" : ""}`}>
+      <button className="close-btn" onClick={() => closeModalSmooth(setShowRegister)}>✕</button>
+      <h2 style={{ fontSize: "clamp(18px, 2.4vw, 22px)" }}>Rejestracja użytkownika</h2>
+
+      <label style={{ display: "block", marginTop: 12 }}>
+        Rodzaj konta:
+        <select
+          value={accountType}
+          onChange={(e) => setAccountType(e.target.value)}
+          style={{ marginTop: 6, padding: 8, borderRadius: 6 }}
+        >
+          <option value="anonimowe">Anonimowe</option>
+          <option value="standardowe">Standardowe</option>
+          <option value="zatwierdzane">Zatwierdzane (wymaga kodu)</option>
+        </select>
+      </label>
+
+      <input
+        type="text"
+        value={newLogin}
+        onChange={(e) => setNewLogin(e.target.value)}
+        placeholder="Login"
+      />
+
+      {accountType !== "anonimowe" && (
+        <input
+          type="password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          placeholder="Hasło"
+        />
+      )}
+
+      {accountType === "zatwierdzane" && (
+        <input
+          type="text"
+          value={verificationCode}
+          onChange={(e) => setVerificationCode(e.target.value)}
+          placeholder="Kod weryfikacyjny (4 cyfry)"
+          maxLength={4}
+        />
+      )}
+
+      <button onClick={handleRegister}>Zarejestruj</button>
+    </div>
+  </div>
+)}
+  
+
 
           {showLogin && (
             <div className="register-overlay">

@@ -1,168 +1,101 @@
-import React, { useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import "./AdminPanel.css";
 
 export default function AdminPanel() {
-  const [adminPassword, setAdminPassword] = useState("");
-  const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState("");
-  const [files, setFiles] = useState([]);
-  const [showUserList, setShowUserList] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [pendingUsers, setPendingUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const adminPassword = "BadMojo2008";
   const backendUrl = "https://filebeam-backend-yqrd.onrender.com";
-  const navigate = useNavigate();
 
-  const fetchUsers = useCallback(async () => {
+  const fetchPendingUsers = async () => {
+    try {
+      const res = await axios.get(`${backendUrl}/admin/pending-users`, {
+        headers: { "x-admin-password": adminPassword },
+      });
+      setPendingUsers(res.data);
+    } catch {
+      console.error("Nie udało się pobrać kont oczekujących");
+    }
+  };
+
+  const fetchAllUsers = async () => {
     try {
       const res = await axios.get(`${backendUrl}/admin/users`, {
-        headers: { "x-admin-password": adminPassword }
+        headers: { "x-admin-password": adminPassword },
       });
-      setUsers(res.data);
-      setIsLoggedIn(true);
-      setSelectedUser("");
-      setFiles([]);
+      setAllUsers(res.data);
     } catch {
-      alert("Błędne hasło lub brak dostępu");
-      setUsers([]);
-    }
-  }, [adminPassword]);
-
-  const fetchFiles = async (userId) => {
-    setSelectedUser(userId);
-    try {
-      const res = await axios.get(`${backendUrl}/files/${userId}`);
-      setFiles(res.data);
-    } catch {
-      setFiles([]);
+      console.error("Nie udało się pobrać listy użytkowników");
     }
   };
 
-  const handleDeleteFile = async (fileName) => {
-    await axios.delete(`${backendUrl}/files/${selectedUser}/${fileName}`);
-    fetchFiles(selectedUser);
-  };
-
-  const handleDeleteUser = async () => {
-    if (!selectedUser) return;
-    const confirmDelete = window.confirm(`Na pewno chcesz usunąć użytkownika "${selectedUser}"?`);
-    if (!confirmDelete) return;
-
+  const approveUser = async (username) => {
+    setLoading(true);
     try {
-      await axios.delete(`${backendUrl}/admin/users/${selectedUser}`, {
-        headers: { "x-admin-password": adminPassword }
+      await axios.post(`${backendUrl}/admin/approve/${username}`, null, {
+        headers: { "x-admin-password": adminPassword },
       });
-      alert("Użytkownik usunięty");
-      fetchUsers();
+      alert(`Zatwierdzono konto: ${username}`);
+      fetchPendingUsers();
     } catch {
-      alert("Błąd przy usuwaniu użytkownika");
+      alert("Nie udało się zatwierdzić konta");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleGoHome = () => {
-    navigate("/");
+  const deleteUser = async (username) => {
+    if (!window.confirm(`Czy na pewno usunąć konto: ${username}?`)) return;
+    setLoading(true);
+    try {
+      await axios.delete(`${backendUrl}/admin/users/${username}`, {
+        headers: { "x-admin-password": adminPassword },
+      });
+      alert(`Usunięto konto: ${username}`);
+      fetchPendingUsers();
+      fetchAllUsers();
+    } catch {
+      alert("Nie udało się usunąć konta");
+    } finally {
+      setLoading(false);
+    }
   };
-  
-  const handleLogout = () => {
-  setIsLoggedIn(false);
-  setUsers([]);
-  setSelectedUser("");
-  setFiles([]);
-  setAdminPassword("");
-  };
+
+  useEffect(() => {
+    fetchPendingUsers();
+    fetchAllUsers();
+  }, []);
 
   return (
-    <div className="admin-panel">
-      <h2>Panel administratora</h2>
+    <div style={{ padding: "24px", maxWidth: "800px", margin: "0 auto" }}>
+      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>🛡️ Panel administratora</h2>
 
-      {!isLoggedIn ? (
-  <>
-    <input
-      type="password"
-      value={adminPassword}
-      onChange={(e) => setAdminPassword(e.target.value)}
-      placeholder="Hasło administratora"
-      style={{ marginRight: "10px" }}
-    />
-    <button onClick={fetchUsers}>Zaloguj</button>
-  </>
-) : (
-  <button onClick={handleLogout} style={{ backgroundColor: "#f44336", color: "white", marginBottom: "10px" }}>
-    🔓 Wyloguj
-  </button>
-)}
-
-      <button onClick={handleGoHome} className="go-home-button">
-        ⬅ Powrót do strony głównej
-      </button>
-
-      {users.length > 0 && (
-        <>
-          <button
-            onClick={() => setShowUserList(!showUserList)}
-            style={{
-              fontSize: "28px",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              marginTop: "20px",
-              color: "#fff"
-            }}
-            title="Kliknij, aby wybrać użytkownika"
-          >
-            👤
-          </button>
-
-          {showUserList && (
-            <select
-              onChange={(e) => fetchFiles(e.target.value)}
-              value={selectedUser}
-              className="user-dropdown"
-            >
-              <option value="">-- wybierz --</option>
-              {users.map((user) => (
-                <option key={user} value={user}>{user}</option>
-              ))}
-            </select>
-          )}
-        </>
+      <h3>✅ Konta oczekujące na zatwierdzenie:</h3>
+      {pendingUsers.length === 0 ? (
+        <p>Brak kont do zatwierdzenia</p>
+      ) : (
+        <ul>
+          {pendingUsers.map((user) => (
+            <li key={user} style={{ marginBottom: "12px" }}>
+              <strong>{user}</strong>
+              <button onClick={() => approveUser(user)} disabled={loading} style={{ marginLeft: "12px" }}>
+                Zatwierdź
+              </button>
+              <button onClick={() => deleteUser(user)} disabled={loading} style={{ marginLeft: "8px", backgroundColor: "#f44336", color: "#fff" }}>
+                Usuń
+              </button>
+            </li>
+          ))}
+        </ul>
       )}
 
-      {selectedUser && (
-        <>
-          <h3 style={{ marginTop: "20px" }}>📄 Pliki użytkownika: {selectedUser}</h3>
-          <button
-            onClick={handleDeleteUser}
-            style={{
-              marginBottom: "10px",
-              backgroundColor: "#f44336",
-              color: "white",
-              padding: "6px 12px",
-              border: "none",
-              borderRadius: "4px"
-            }}
-          >
-            🗑️ Usuń użytkownika
-          </button>
-          {files.length === 0 ? (
-            <p>Brak plików</p>
-          ) : (
-            <ul>
-              {files.map((file, index) => (
-                <li key={index}>
-                  {file}
-                  <a href={`${backendUrl}/files/${selectedUser}/${file}`} download>
-                    <button style={{ marginLeft: "10px" }}>Pobierz</button>
-                  </a>
-                  <button onClick={() => handleDeleteFile(file)} style={{ marginLeft: "5px" }}>
-                    Usuń
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </>
-      )}
+      <h3 style={{ marginTop: "32px" }}>📋 Wszyscy użytkownicy:</h3>
+      <ul>
+        {allUsers.map((user) => (
+          <li key={user} style={{ marginBottom: "8px" }}>{user}</li>
+        ))}
+      </ul>
     </div>
   );
 }

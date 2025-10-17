@@ -55,7 +55,7 @@ html, body {
 .admin-panel h2 {
   font-size: 32px;
   margin-bottom: 20px;
-  color: #ffffff;
+  color: #7a387a;
   text-shadow: -5px 2px 24px rgba(223, 153, 0, 1);
 }
 
@@ -147,4 +147,18 @@ html, body {
 
 .admin-panel a button:hover {
   background-color: #27ae60;
+}
+.fade-button {
+  animation: fadeSwap 0.4s ease-in-out;
+}
+
+@keyframes fadeSwap {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

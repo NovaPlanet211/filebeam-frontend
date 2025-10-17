@@ -14,13 +14,11 @@
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   padding: 40px 20px;
-  font-size: calc(10px + 2vmin);
-  color: white;
   display: block;
 }
+
 
 
 .App-link {
@@ -39,6 +37,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
   background: radial-gradient(circle, rgba(89, 131, 252, 1) 33%, rgba(41, 53, 86, 1) 63%);
   background-attachment: fixed;
   background-size: cover;
@@ -56,4 +55,25 @@ html, body {
 .main-content {
   max-width: 1000px;
   margin: 0 auto;
+}
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  transition: transform 0.2s ease;
+}
+
+.scroll-to-top:hover {
+  transform: scale(1.1);
+  background-color: #0056b3;
 }
