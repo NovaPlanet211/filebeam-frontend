@@ -9,9 +9,9 @@ const LoadingScreen = ({ onFinish }) => {
     const timer = setTimeout(() => {
       setVisible(false);
       if (typeof onFinish === "function") {
-        onFinish(); // powiadom rodzica że animacja się skończyła
+        onFinish(); 
       }
-    }, 2000);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, [onFinish]);
