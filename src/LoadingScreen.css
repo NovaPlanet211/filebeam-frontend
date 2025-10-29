@@ -50,7 +50,7 @@
 }
 
 .logo-pop {
-  animation: popIn 0.6s ease-out forwards;
+  animation: popIn 3s ease-out forwards;
 }
 .logo-pop {
   width: 300px;
