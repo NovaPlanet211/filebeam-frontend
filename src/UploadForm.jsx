@@ -299,11 +299,11 @@ export default function UploadForm() {
           </div>
 
           <h2 style={{ fontSize: "clamp(18px, 2.2vw, 28px)", textAlign: "center" }}>
-            <span className="rainbow-text">BIAŁY WŁODZIMIERZ</span>
+            <span className="rainbow-text">Mr. ERROR</span>
           </h2>
 
           <p style={{ marginTop: 10, fontWeight: "bold", color: darkMode ? "#dff" : undefined }}>
-            👤 Zalogowany jako: <span style={{ color: "#00e0ff" }}>{userId}</span>
+            👤 Zalogowany jako: <span style={{ color: "#ff0000ff" }}>{userId}</span>
           </p>
 
           <div
@@ -403,7 +403,7 @@ export default function UploadForm() {
           </ul>
 
           <a href="#/admin">
-            <button style={{ backgroundColor: "#f5084f", marginTop: 20, color: "#fff" }}>
+            <button style={{ backgroundColor: "#f5084f", marginTop: 20, color: "#9a10f7ff" }}>
               Przejdź do panelu admina
             </button>
           </a>
