@@ -273,11 +273,9 @@ export default function UploadForm() {
             >
               <button onClick={() => setShowRegister(true)}>Rejestracja</button>
               <button onClick={() => setShowLogin(true)}>Logowanie</button>
-              <a href="#/admin">
-            <button style={{ backgroundColor: "#f5084f", marginTop: 20, color: "#9a10f7ff" }}>
-              Przejdź do panelu admina
-            </button>
-          </a>
+              <button onClick={() => navigate("/admin")}>Panel administratora</button>
+            
+          
             </div>
             <p style={{ textAlign: "center", marginTop: "20px" }}>
               Zarejestruj się lub zaloguj, aby przesyłać pliki
@@ -408,7 +406,7 @@ export default function UploadForm() {
           </ul>
 
           <a href="#/admin">
-            <button style={{ backgroundColor: "#f5084f", marginTop: 20, color: "#9a10f7ff" }}>
+            <button style={{ backgroundColor: "#ffffffff", marginTop: 20, color: "#726b77ff" }}>
               Przejdź do panelu admina
             </button>
           </a>
