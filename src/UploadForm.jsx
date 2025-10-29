@@ -189,18 +189,18 @@ export default function UploadForm() {
   <div className="register-overlay">
     <div className={`register-content ${modalClosing ? "closing" : ""}`}>
       <button className="close-btn" onClick={() => closeModalSmooth(setShowRegister)}>✕</button>
-      <h2 style={{ fontSize: "clamp(18px, 2.4vw, 22px)" }}>Rejestracja użytkownika</h2>
+      <h2 style={{ fontSize: "clamp(18px, 2.4vw, 22px)" }}> Rejestracja użytkownika </h2>
 
       <label style={{ display: "block", marginTop: 12 }}>
-        Rodzaj konta:
+        Rodzaj konta :   
         <select
           value={accountType}
           onChange={(e) => setAccountType(e.target.value)}
           style={{ marginTop: 6, padding: 8, borderRadius: 6 }}
         >
-          <option value="anonimowe">Anonimowe</option>
-          <option value="standardowe">Standardowe</option>
-          <option value="zatwierdzane">Zatwierdzane (wymaga kodu)</option>
+          <option value="anonimowe"> Amon </option>
+          <option value="standardowe"> Klasyczne </option>
+          <option value="zatwierdzane"> Zweryfikowane (z kodem)</option>
         </select>
       </label>
 
@@ -230,7 +230,7 @@ export default function UploadForm() {
         />
       )}
 
-      <button onClick={handleRegister}>Zarejestruj</button>
+      <button onClick={handleRegister}> Zarejestruj </button>
     </div>
   </div>
 )}
