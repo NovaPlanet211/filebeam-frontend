@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./UploadForm.css";
 import "./AdminPanel.jsx";
-import AdminPanel from "./AdminPanel.jsx";
   
 export default function UploadForm() {
   const [file, setFile] = useState(null);
@@ -261,17 +260,7 @@ export default function UploadForm() {
               </div>
             </div>
           )}
-          {!isLoggedIn && (
-        <>
-          <input
-            type="password"
-            value={adminPassword}
-            onChange={(e) => setAdminPassword(e.target.value)}
-            placeholder="Hasło administratora"
-          />
-          <button onClick={fetchUsers}>Zaloguj</button>
-        </>
-      )}
+
           <div className="upload-form">
             <div
               className="toggle-buttons"
@@ -284,7 +273,11 @@ export default function UploadForm() {
             >
               <button onClick={() => setShowRegister(true)}>Rejestracja</button>
               <button onClick={() => setShowLogin(true)}>Logowanie</button>
-              <button onClick={() => setShowAdmin(true)>AdminPanel</button>
+              <a href="#/admin">
+            <button style={{ backgroundColor: "#f5084f", marginTop: 20, color: "#9a10f7ff" }}>
+              Przejdź do panelu admina
+            </button>
+          </a>
             </div>
             <p style={{ textAlign: "center", marginTop: "20px" }}>
               Zarejestruj się lub zaloguj, aby przesyłać pliki
